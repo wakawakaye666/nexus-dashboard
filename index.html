@@ -10,23 +10,40 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
---bg-primary:#060a1a;--bg-secondary:#0a0e27;
---bg-card:rgba(15,23,42,0.75);--bg-card-hover:rgba(20,30,55,0.85);
---accent-cyan:#00d4ff;--accent-purple:#7c3aed;--accent-green:#10b981;
---accent-pink:#f472b6;--accent-orange:#fb923c;--accent-red:#ef4444;
---text-primary:#e2e8f0;--text-secondary:#94a3b8;--text-dim:#64748b;
---border:rgba(0,212,255,0.15);--border-hover:rgba(0,212,255,0.35);
---glow:0 0 20px rgba(0,212,255,0.15);--glow-strong:0 0 30px rgba(0,212,255,0.25);
+--bg-primary:#FFF8F0;--bg-secondary:#FFF0E0;--bg-tertiary:#FAEBD7;
+--bg-card:rgba(255,248,240,0.85);--bg-card-hover:rgba(255,240,224,0.92);
+--accent-orange:#FF6B35;--accent-gold:#FFB347;--accent-coral:#E85D75;
+--accent-purple:#9B6BFF;--accent-green:#2ECC71;--accent-teal:#00B894;
+--accent-red:#E74C3C;
+--text-primary:#2D3436;--text-secondary:#636E72;--text-dim:#95A5A6;
+--border:rgba(255,107,53,0.15);--border-hover:rgba(255,107,53,0.35);
+--glow:0 0 20px rgba(255,107,53,0.12);--glow-strong:0 0 30px rgba(255,107,53,0.2);
 --radius:12px;--radius-sm:8px;--radius-lg:16px;
 --transition:all .25s cubic-bezier(.4,0,.2,1);
 --sidebar-width:17.5%;
 }
 html{font-size:14px;scroll-behavior:smooth}
-body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--bg-primary),var(--bg-secondary));color:var(--text-primary);min-height:100vh;overflow-x:hidden;position:relative}
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--bg-primary),var(--bg-secondary),var(--bg-tertiary));color:var(--text-primary);min-height:100vh;overflow-x:hidden;position:relative}
 ::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(0,212,255,0.25);border-radius:3px}
-::-webkit-scrollbar-thumb:hover{background:rgba(0,212,255,0.45)}
+::-webkit-scrollbar-thumb{background:rgba(255,107,53,0.25);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,107,53,0.45)}
+
+/* Welcome Screen */
+#welcomeScreen{position:fixed;top:0;left:0;width:100%;height:100vh;z-index:9999;background:linear-gradient(135deg,#FFF8F0,#FFF0E0,#FAEBD7);display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;transition:opacity 0.8s ease,transform 0.8s ease}
+#welcomeScreen.fade-out{opacity:0;transform:scale(1.05);pointer-events:none}
+.welcome-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+.welcome-glow{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,53,0.15),transparent 70%);pointer-events:none;transform:translate(-50%,-50%);transition:opacity 0.3s}
+.welcome-content{position:relative;z-index:2;text-align:center;transform-style:preserve-3d;perspective:1000px}
+.welcome-title{font-family:'Orbitron',sans-serif;font-size:5rem;font-weight:900;background:linear-gradient(135deg,#FF6B35,#FFB347,#E85D75);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:8px;text-shadow:none;margin-bottom:12px;transition:transform 0.1s ease-out}
+.welcome-subtitle{font-size:1.3rem;color:var(--text-secondary);letter-spacing:6px;margin-bottom:48px;font-weight:300}
+.welcome-tagline{font-size:0.9rem;color:var(--text-dim);margin-bottom:40px;letter-spacing:2px}
+.welcome-btn{padding:16px 48px;border-radius:50px;border:2px solid rgba(255,107,53,0.4);background:rgba(255,107,53,0.08);color:var(--accent-orange);font-size:1.1rem;font-family:'Inter',sans-serif;font-weight:600;cursor:pointer;letter-spacing:3px;transition:all 0.3s ease;position:relative;overflow:hidden}
+.welcome-btn:hover{background:rgba(255,107,53,0.15);border-color:rgba(255,107,53,0.6);box-shadow:0 0 40px rgba(255,107,53,0.2);transform:translateY(-2px)}
+.welcome-btn::before{content:'';position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;background:rgba(255,107,53,0.1);transform:translate(-50%,-50%);transition:width 0.6s,height 0.6s}
+.welcome-btn:hover::before{width:300px;height:300px}
+@keyframes breathe{0%,100%{box-shadow:0 0 20px rgba(255,107,53,0.15)}50%{box-shadow:0 0 40px rgba(255,107,53,0.3)}}
+.welcome-btn{animation:breathe 3s ease-in-out infinite}
 
 /* Particle Canvas */
 #particleCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
@@ -35,44 +52,44 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--bg-p
 .app{display:flex;min-height:100vh;position:relative;z-index:1}
 
 /* Sidebar */
-.sidebar{width:var(--sidebar-width);min-width:220px;background:rgba(10,14,39,0.92);border-right:1px solid var(--border);backdrop-filter:blur(20px);display:flex;flex-direction:column;position:fixed;height:100vh;z-index:10;transition:var(--transition);overflow-y:auto}
+.sidebar{width:var(--sidebar-width);min-width:220px;background:rgba(255,248,240,0.92);border-right:1px solid var(--border);backdrop-filter:blur(20px);display:flex;flex-direction:column;position:fixed;height:100vh;z-index:10;transition:var(--transition);overflow-y:auto}
 .sidebar-header{padding:24px 20px;text-align:center;border-bottom:1px solid var(--border)}
-.sidebar-logo{font-family:'Orbitron',sans-serif;font-size:1.6rem;font-weight:900;background:linear-gradient(135deg,var(--accent-cyan),var(--accent-purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none;letter-spacing:2px}
+.sidebar-logo{font-family:'Orbitron',sans-serif;font-size:1.6rem;font-weight:900;background:linear-gradient(135deg,var(--accent-orange),var(--accent-coral));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none;letter-spacing:2px}
 .sidebar-logo span{font-size:.7rem;display:block;color:var(--text-secondary);-webkit-text-fill-color:var(--text-secondary);letter-spacing:4px;margin-top:4px;font-family:'Inter',sans-serif}
 .sidebar-date{padding:16px 20px;text-align:center;border-bottom:1px solid var(--border)}
 .sidebar-date .date-text{font-size:.85rem;color:var(--text-secondary)}
-.sidebar-date .clock{font-family:'Orbitron',sans-serif;font-size:1.5rem;color:var(--accent-cyan);margin-top:6px;text-shadow:0 0 15px rgba(0,212,255,0.5)}
+.sidebar-date .clock{font-family:'Orbitron',sans-serif;font-size:1.5rem;color:var(--accent-orange);margin-top:6px;text-shadow:0 0 15px rgba(255,107,53,0.3)}
 .sidebar-nav{flex:1;padding:12px 10px}
 .nav-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--radius-sm);cursor:pointer;transition:var(--transition);color:var(--text-secondary);font-size:.9rem;margin-bottom:4px;position:relative;overflow:hidden}
-.nav-item:hover{background:rgba(0,212,255,0.06);color:var(--text-primary)}
-.nav-item.active{background:rgba(0,212,255,0.1);color:var(--accent-cyan);box-shadow:inset 0 0 20px rgba(0,212,255,0.05)}
-.nav-item.active::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;background:var(--accent-cyan);border-radius:0 3px 3px 0;box-shadow:0 0 10px var(--accent-cyan)}
+.nav-item:hover{background:rgba(255,107,53,0.06);color:var(--text-primary)}
+.nav-item.active{background:rgba(255,107,53,0.1);color:var(--accent-orange);box-shadow:inset 0 0 20px rgba(255,107,53,0.05)}
+.nav-item.active::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;background:var(--accent-orange);border-radius:0 3px 3px 0;box-shadow:0 0 10px var(--accent-orange)}
 .nav-icon{font-size:1.2rem;width:24px;text-align:center}
 .sidebar-footer{padding:16px 20px;border-top:1px solid var(--border);text-align:center}
 .sidebar-footer .version{font-size:.7rem;color:var(--text-dim)}
 .data-status{font-size:.65rem;color:var(--accent-green);margin-top:4px;min-height:14px}
 
 /* Data management mini stats */
-.stat-mini{background:rgba(0,212,255,0.04);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center}
-.stat-mini-value{font-family:'Orbitron',sans-serif;font-size:1.4rem;color:var(--accent-cyan);font-weight:700}
+.stat-mini{background:rgba(255,107,53,0.04);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center}
+.stat-mini-value{font-family:'Orbitron',sans-serif;font-size:1.4rem;color:var(--accent-orange);font-weight:700}
 .stat-mini-label{font-size:.75rem;color:var(--text-secondary);margin-top:4px}
 
 /* Backup history items */
-.backup-item{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(10,14,39,0.4);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:6px;transition:var(--transition)}
+.backup-item{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(255,248,240,0.6);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:6px;transition:var(--transition)}
 .backup-item:hover{border-color:var(--border-hover)}
 .backup-info{flex:1}
 .backup-time{font-size:.85rem;color:var(--text-primary)}
 .backup-meta{font-size:.72rem;color:var(--text-dim);margin-top:2px}
 .backup-actions{display:flex;gap:6px}
 .backup-btn{padding:4px 10px;font-size:.72rem;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--text-secondary);cursor:pointer;transition:var(--transition)}
-.backup-btn:hover{border-color:var(--accent-cyan);color:var(--accent-cyan)}
-.backup-btn.restore{border-color:rgba(16,185,129,0.3);color:var(--accent-green)}
-.backup-btn.restore:hover{background:rgba(16,185,129,0.1)}
-.backup-btn.delete{border-color:rgba(239,68,68,0.3);color:var(--accent-red)}
-.backup-btn.delete:hover{background:rgba(239,68,68,0.1)}
+.backup-btn:hover{border-color:var(--accent-orange);color:var(--accent-orange)}
+.backup-btn.restore{border-color:rgba(46,204,113,0.3);color:var(--accent-green)}
+.backup-btn.restore:hover{background:rgba(46,204,113,0.1)}
+.backup-btn.delete{border-color:rgba(231,76,60,0.3);color:var(--accent-red)}
+.backup-btn.delete:hover{background:rgba(231,76,60,0.1)}
 
 /* Migration log */
-.log-entry{padding:6px 0;border-bottom:1px solid rgba(0,212,255,0.06);display:flex;gap:8px;align-items:flex-start}
+.log-entry{padding:6px 0;border-bottom:1px solid rgba(255,107,53,0.06);display:flex;gap:8px;align-items:flex-start}
 .log-time{color:var(--text-dim);font-size:.72rem;white-space:nowrap;min-width:90px}
 .log-msg{flex:1}
 .log-success{color:var(--accent-green)}
@@ -85,14 +102,14 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--bg-p
 .page.active{display:block;animation:fadeIn .3s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .page-header{margin-bottom:24px}
-.page-title{font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:700;color:var(--text-primary);text-shadow:0 0 20px rgba(0,212,255,0.1)}
+.page-title{font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:700;color:var(--text-primary)}
 .page-subtitle{color:var(--text-secondary);font-size:.85rem;margin-top:4px}
 
 /* Cards */
 .card{background:var(--bg-card);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;transition:var(--transition);position:relative;overflow:hidden}
 .card:hover{border-color:var(--border-hover);box-shadow:var(--glow)}
-.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,0.3),transparent)}
-.card-title{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:600;color:var(--accent-cyan);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,107,53,0.3),transparent)}
+.card-title{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:600;color:var(--accent-orange);margin-bottom:14px;display:flex;align-items:center;gap:8px}
 .card-title .icon{font-size:1.1rem}
 
 /* Grid layouts */
@@ -106,51 +123,52 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--bg-p
 /* Stat cards */
 .stat-card{text-align:center;padding:20px 16px}
 .stat-icon{font-size:2rem;margin-bottom:8px}
-.stat-value{font-family:'Orbitron',sans-serif;font-size:2rem;font-weight:700;color:var(--accent-cyan);text-shadow:0 0 15px rgba(0,212,255,0.3)}
+.stat-value{font-family:'Orbitron',sans-serif;font-size:2rem;font-weight:700;color:var(--accent-orange);text-shadow:0 0 15px rgba(255,107,53,0.2)}
 .stat-label{font-size:.8rem;color:var(--text-secondary);margin-top:4px}
 .stat-change{font-size:.75rem;margin-top:6px}
 .stat-change.up{color:var(--accent-green)}
 .stat-change.down{color:var(--accent-red)}
 
 /* Buttons */
-.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius-sm);border:1px solid var(--border);background:rgba(0,212,255,0.06);color:var(--text-primary);font-size:.85rem;cursor:pointer;transition:var(--transition);font-family:'Inter',sans-serif}
-.btn:hover{background:rgba(0,212,255,0.12);border-color:var(--border-hover);box-shadow:var(--glow)}
-.btn-primary{background:linear-gradient(135deg,rgba(0,212,255,0.2),rgba(124,58,237,0.2));border-color:rgba(0,212,255,0.3)}
-.btn-primary:hover{background:linear-gradient(135deg,rgba(0,212,255,0.3),rgba(124,58,237,0.3))}
-.btn-danger{border-color:rgba(239,68,68,0.3);color:var(--accent-red)}
-.btn-danger:hover{background:rgba(239,68,68,0.12)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius-sm);border:1px solid var(--border);background:rgba(255,107,53,0.06);color:var(--text-primary);font-size:.85rem;cursor:pointer;transition:var(--transition);font-family:'Inter',sans-serif}
+.btn:hover{background:rgba(255,107,53,0.12);border-color:var(--border-hover);box-shadow:var(--glow)}
+.btn-primary{background:linear-gradient(135deg,rgba(255,107,53,0.15),rgba(232,93,117,0.15));border-color:rgba(255,107,53,0.3)}
+.btn-primary:hover{background:linear-gradient(135deg,rgba(255,107,53,0.25),rgba(232,93,117,0.25))}
+.btn-danger{border-color:rgba(231,76,60,0.3);color:var(--accent-red)}
+.btn-danger:hover{background:rgba(231,76,60,0.12)}
 .btn-sm{padding:5px 10px;font-size:.78rem}
-.btn-group{display:inline-flex;gap:2px;background:rgba(10,14,39,0.8);border-radius:var(--radius-sm);padding:2px;border:1px solid var(--border)}
+.btn-group{display:inline-flex;gap:2px;background:rgba(255,248,240,0.8);border-radius:var(--radius-sm);padding:2px;border:1px solid var(--border)}
 .btn-group .btn-chart{padding:5px 12px;font-size:.75rem;border:none;border-radius:6px;background:transparent;color:var(--text-secondary);cursor:pointer;transition:var(--transition)}
-.btn-group .btn-chart.active{background:rgba(0,212,255,0.15);color:var(--accent-cyan)}
+.btn-group .btn-chart.active{background:rgba(255,107,53,0.15);color:var(--accent-orange)}
 .btn-group .btn-chart:hover{color:var(--text-primary)}
 
 /* Inputs */
-.input,.textarea,.select{width:100%;padding:10px 14px;background:rgba(10,14,39,0.6);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:.9rem;font-family:'Inter',sans-serif;transition:var(--transition);outline:none}
-.input:focus,.textarea:focus,.select:focus{border-color:var(--accent-cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.1)}
+.input,.textarea,.select{width:100%;padding:10px 14px;background:rgba(255,248,240,0.6);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:.9rem;font-family:'Inter',sans-serif;transition:var(--transition);outline:none}
+.input:focus,.textarea:focus,.select:focus{border-color:var(--accent-orange);box-shadow:0 0 0 3px rgba(255,107,53,0.1)}
 .input::placeholder{color:var(--text-dim)}
 .textarea{resize:vertical;min-height:80px}
-.select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23636E72' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
 .form-group{margin-bottom:14px}
 .form-label{display:block;font-size:.8rem;color:var(--text-secondary);margin-bottom:6px}
 
 /* Tags */
 .tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:500;border:1px solid}
-.tag-cyan{color:var(--accent-cyan);border-color:rgba(0,212,255,0.3);background:rgba(0,212,255,0.08)}
-.tag-purple{color:var(--accent-purple);border-color:rgba(124,58,237,0.3);background:rgba(124,58,237,0.08)}
-.tag-green{color:var(--accent-green);border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.08)}
-.tag-pink{color:var(--accent-pink);border-color:rgba(244,114,182,0.3);background:rgba(244,114,182,0.08)}
-.tag-orange{color:var(--accent-orange);border-color:rgba(251,146,60,0.3);background:rgba(251,146,60,0.08)}
-.tag-red{color:var(--accent-red);border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.08)}
+.tag-orange{color:var(--accent-orange);border-color:rgba(255,107,53,0.3);background:rgba(255,107,53,0.08)}
+.tag-purple{color:var(--accent-purple);border-color:rgba(155,107,255,0.3);background:rgba(155,107,255,0.08)}
+.tag-green{color:var(--accent-green);border-color:rgba(46,204,113,0.3);background:rgba(46,204,113,0.08)}
+.tag-coral{color:var(--accent-coral);border-color:rgba(232,93,117,0.3);background:rgba(232,93,117,0.08)}
+.tag-gold{color:var(--accent-gold);border-color:rgba(255,179,71,0.3);background:rgba(255,179,71,0.08)}
+.tag-red{color:var(--accent-red);border-color:rgba(231,76,60,0.3);background:rgba(231,76,60,0.08)}
+.tag-cyan{color:var(--accent-orange);border-color:rgba(255,107,53,0.3);background:rgba(255,107,53,0.08)}
 
 /* Todo items */
-.todo-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(10,14,39,0.4);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;transition:var(--transition)}
-.todo-item:hover{border-color:var(--border-hover);background:rgba(10,14,39,0.6)}
+.todo-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(255,248,240,0.5);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;transition:var(--transition)}
+.todo-item:hover{border-color:var(--border-hover);background:rgba(255,248,240,0.7)}
 .todo-item.completed .todo-text{text-decoration:line-through;color:var(--text-dim)}
 .todo-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--transition);flex-shrink:0}
-.todo-check:hover{border-color:var(--accent-cyan)}
-.todo-check.checked{background:var(--accent-cyan);border-color:var(--accent-cyan)}
-.todo-check.checked::after{content:'✓';color:var(--bg-primary);font-size:.7rem;font-weight:700}
+.todo-check:hover{border-color:var(--accent-orange)}
+.todo-check.checked{background:var(--accent-orange);border-color:var(--accent-orange)}
+.todo-check.checked::after{content:'✓';color:#fff;font-size:.7rem;font-weight:700}
 .todo-text{flex:1;font-size:.88rem}
 .todo-meta{display:flex;gap:6px;align-items:center}
 .todo-delete{opacity:0;cursor:pointer;color:var(--text-dim);transition:var(--transition);font-size:.9rem}
@@ -158,69 +176,69 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--bg-p
 .todo-delete:hover{color:var(--accent-red)}
 
 /* Timer */
-.timer-display{font-family:'Orbitron',sans-serif;font-size:3.5rem;font-weight:700;text-align:center;color:var(--accent-cyan);text-shadow:0 0 30px rgba(0,212,255,0.4);padding:30px 0;letter-spacing:4px}
+.timer-display{font-family:'Orbitron',sans-serif;font-size:3.5rem;font-weight:700;text-align:center;color:var(--accent-orange);text-shadow:0 0 30px rgba(255,107,53,0.2);padding:30px 0;letter-spacing:4px}
 .timer-controls{display:flex;justify-content:center;gap:12px;margin:16px 0}
 .timer-controls .btn{min-width:90px;justify-content:center}
 .focus-modes{display:flex;gap:8px;justify-content:center;margin:12px 0;flex-wrap:wrap}
 .focus-mode{padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);cursor:pointer;font-size:.8rem;transition:var(--transition)}
-.focus-mode.active{background:rgba(0,212,255,0.12);color:var(--accent-cyan);border-color:rgba(0,212,255,0.3)}
+.focus-mode.active{background:rgba(255,107,53,0.12);color:var(--accent-orange);border-color:rgba(255,107,53,0.3)}
 
 /* Time log */
 .time-entry{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid var(--border);font-size:.85rem}
 .time-entry:last-child{border-bottom:none}
 .time-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .time-project{flex:1;font-weight:500}
-.time-duration{font-family:'Orbitron',sans-serif;color:var(--accent-cyan);font-size:.8rem}
+.time-duration{font-family:'Orbitron',sans-serif;color:var(--accent-orange);font-size:.8rem}
 .time-date{color:var(--text-dim);font-size:.75rem}
 
 /* Habit */
-.habit-card{padding:16px;background:rgba(10,14,39,0.4);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;transition:var(--transition)}
+.habit-card{padding:16px;background:rgba(255,248,240,0.5);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;transition:var(--transition)}
 .habit-card:hover{border-color:var(--border-hover)}
 .habit-header{display:flex;align-items:center;justify-content:between;gap:12px;margin-bottom:10px}
 .habit-name{flex:1;font-weight:600;font-size:.95rem}
 .habit-streak{font-family:'Orbitron',sans-serif;font-size:.85rem;color:var(--accent-orange)}
-.habit-checkin-btn{padding:6px 14px;border-radius:20px;border:1px solid rgba(0,212,255,0.3);background:rgba(0,212,255,0.08);color:var(--accent-cyan);cursor:pointer;font-size:.8rem;transition:var(--transition)}
-.habit-checkin-btn:hover{background:rgba(0,212,255,0.2)}
-.habit-checkin-btn.done{background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.3);color:var(--accent-green);cursor:default}
+.habit-checkin-btn{padding:6px 14px;border-radius:20px;border:1px solid rgba(255,107,53,0.3);background:rgba(255,107,53,0.08);color:var(--accent-orange);cursor:pointer;font-size:.8rem;transition:var(--transition)}
+.habit-checkin-btn:hover{background:rgba(255,107,53,0.2)}
+.habit-checkin-btn.done{background:rgba(46,204,113,0.15);border-color:rgba(46,204,113,0.3);color:var(--accent-green);cursor:default}
 .habit-weather{font-size:.75rem;color:var(--text-dim);margin-top:4px}
 .habit-week{display:flex;gap:4px;margin-top:8px}
 .habit-day{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.65rem;border:1px solid var(--border);color:var(--text-dim)}
-.habit-day.done{background:rgba(0,212,255,0.15);border-color:rgba(0,212,255,0.3);color:var(--accent-cyan)}
-.habit-day.today{border-color:var(--accent-purple);box-shadow:0 0 8px rgba(124,58,237,0.3)}
+.habit-day.done{background:rgba(255,107,53,0.15);border-color:rgba(255,107,53,0.3);color:var(--accent-orange)}
+.habit-day.today{border-color:var(--accent-coral);box-shadow:0 0 8px rgba(232,93,117,0.2)}
 
 /* Heatmap */
 .heatmap-container{margin-top:16px}
 .heatmap-grid{display:flex;gap:3px;flex-wrap:wrap}
-.heatmap-cell{width:14px;height:14px;border-radius:3px;background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.05);transition:var(--transition)}
-.heatmap-cell.l1{background:rgba(0,212,255,0.15)}
-.heatmap-cell.l2{background:rgba(0,212,255,0.3)}
-.heatmap-cell.l3{background:rgba(0,212,255,0.5)}
-.heatmap-cell.l4{background:rgba(0,212,255,0.75);box-shadow:0 0 6px rgba(0,212,255,0.3)}
+.heatmap-cell{width:14px;height:14px;border-radius:3px;background:rgba(255,107,53,0.05);border:1px solid rgba(255,107,53,0.05);transition:var(--transition)}
+.heatmap-cell.l1{background:rgba(255,107,53,0.15)}
+.heatmap-cell.l2{background:rgba(255,107,53,0.3)}
+.heatmap-cell.l3{background:rgba(255,107,53,0.5)}
+.heatmap-cell.l4{background:rgba(255,107,53,0.75);box-shadow:0 0 6px rgba(255,107,53,0.2)}
 .heatmap-legend{display:flex;align-items:center;gap:4px;margin-top:8px;font-size:.7rem;color:var(--text-dim)}
 .heatmap-legend .heatmap-cell{width:12px;height:12px}
 
 /* News cards */
-.news-card{padding:14px 16px;background:rgba(10,14,39,0.4);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;transition:var(--transition);cursor:pointer}
-.news-card:hover{border-color:var(--border-hover);background:rgba(10,14,39,0.6)}
+.news-card{padding:14px 16px;background:rgba(255,248,240,0.5);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;transition:var(--transition);cursor:pointer}
+.news-card:hover{border-color:var(--border-hover);background:rgba(255,248,240,0.7)}
 .news-card.read{opacity:.65}
 .news-card-header{display:flex;align-items:flex-start;gap:10px}
 .news-card-title{flex:1;font-weight:600;font-size:.9rem;line-height:1.4}
 .news-card-title a{color:var(--text-primary);text-decoration:none;transition:var(--transition)}
-.news-card-title a:hover{color:var(--accent-cyan)}
+.news-card-title a:hover{color:var(--accent-orange)}
 .news-card-summary{font-size:.8rem;color:var(--text-secondary);margin-top:6px;line-height:1.5}
 .news-card-footer{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
 .news-card-source{font-size:.72rem;color:var(--text-dim)}
 .news-actions{display:flex;gap:6px;margin-left:auto}
 .news-action-btn{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:.85rem;transition:var(--transition);padding:2px 4px}
-.news-action-btn:hover{color:var(--accent-cyan)}
-.news-action-btn.bookmarked{color:var(--accent-orange)}
+.news-action-btn:hover{color:var(--accent-orange)}
+.news-action-btn.bookmarked{color:var(--accent-gold)}
 
 /* Academic cards */
-.academic-card{padding:16px;background:rgba(10,14,39,0.4);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;transition:var(--transition)}
-.academic-card:hover{border-color:var(--border-hover);background:rgba(10,14,39,0.6)}
+.academic-card{padding:16px;background:rgba(255,248,240,0.5);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;transition:var(--transition)}
+.academic-card:hover{border-color:var(--border-hover);background:rgba(255,248,240,0.7)}
 .academic-title{font-weight:600;font-size:.95rem;margin-bottom:4px}
 .academic-title a{color:var(--text-primary);text-decoration:none;transition:var(--transition)}
-.academic-title a:hover{color:var(--accent-cyan)}
+.academic-title a:hover{color:var(--accent-orange)}
 .academic-authors{font-size:.78rem;color:var(--text-secondary);margin-bottom:4px}
 .academic-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
 .academic-summary{font-size:.82rem;color:var(--text-secondary);line-height:1.5;margin-bottom:8px}
@@ -231,11 +249,11 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--bg-p
 .chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 
 /* Modal */
-.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:var(--transition)}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.25);backdrop-filter:blur(6px);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:var(--transition)}
 .modal-overlay.show{opacity:1;pointer-events:all}
-.modal{background:rgba(15,23,42,0.95);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;width:90%;max-width:480px;backdrop-filter:blur(20px);position:relative}
-.modal::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,0.4),transparent)}
-.modal-title{font-family:'Orbitron',sans-serif;font-size:1.1rem;margin-bottom:18px;color:var(--accent-cyan)}
+.modal{background:rgba(255,248,240,0.97);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;width:90%;max-width:480px;backdrop-filter:blur(20px);position:relative;box-shadow:0 20px 60px rgba(255,107,53,0.1)}
+.modal::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,107,53,0.4),transparent)}
+.modal-title{font-family:'Orbitron',sans-serif;font-size:1.1rem;margin-bottom:18px;color:var(--accent-orange)}
 .modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:1.2rem;transition:var(--transition)}
 .modal-close:hover{color:var(--text-primary)}
 
@@ -244,7 +262,7 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--bg-p
 .filter-bar .search-input{max-width:260px}
 .filter-pills{display:flex;gap:4px;flex-wrap:wrap}
 .filter-pill{padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);cursor:pointer;font-size:.78rem;transition:var(--transition)}
-.filter-pill.active{background:rgba(0,212,255,0.12);color:var(--accent-cyan);border-color:rgba(0,212,255,0.3)}
+.filter-pill.active{background:rgba(255,107,53,0.12);color:var(--accent-orange);border-color:rgba(255,107,53,0.3)}
 
 /* Empty state */
 .empty-state{text-align:center;padding:40px 20px;color:var(--text-dim)}
@@ -253,7 +271,7 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--bg-p
 
 /* Priority indicators */
 .priority-high{color:var(--accent-red)}
-.priority-medium{color:var(--accent-orange)}
+.priority-medium{color:var(--accent-gold)}
 .priority-low{color:var(--accent-green)}
 
 /* Responsive */
@@ -270,21 +288,80 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--bg-p
   .grid-4,.grid-3,.grid-2{grid-template-columns:1fr}
   .mobile-toggle{display:flex!important}
   .timer-display{font-size:2.5rem}
+  .welcome-title{font-size:3rem}
 }
 
 /* Mobile toggle */
 .mobile-toggle{display:none;position:fixed;top:16px;left:16px;z-index:20;width:40px;height:40px;border-radius:var(--radius-sm);background:var(--bg-card);border:1px solid var(--border);align-items:center;justify-content:center;cursor:pointer;color:var(--text-primary);font-size:1.2rem;backdrop-filter:blur(10px)}
 
 /* Glow text */
-.glow-text{text-shadow:0 0 10px rgba(0,212,255,0.4),0 0 20px rgba(0,212,255,0.2)}
+.glow-text{text-shadow:0 0 10px rgba(255,107,53,0.15),0 0 20px rgba(255,107,53,0.08)}
 
 /* Animations */
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
 @keyframes ripple{0%{transform:scale(0);opacity:.6}100%{transform:scale(4);opacity:0}}
 .pulse{animation:pulse 2s infinite}
+
+/* Game Modal Styles */
+.game-modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.3);backdrop-filter:blur(8px);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:var(--transition)}
+.game-modal-overlay.show{opacity:1;pointer-events:all}
+.game-modal{background:rgba(255,248,240,0.98);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;width:90%;max-width:520px;max-height:90vh;overflow-y:auto;position:relative;box-shadow:0 20px 80px rgba(255,107,53,0.15)}
+.game-modal::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent-orange),var(--accent-coral),var(--accent-gold));border-radius:2px 2px 0 0}
+.game-title{font-family:'Orbitron',sans-serif;font-size:1.3rem;color:var(--accent-orange);margin-bottom:8px;text-align:center}
+.game-desc{font-size:.85rem;color:var(--text-secondary);text-align:center;margin-bottom:20px}
+.game-area{min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.game-score{font-family:'Orbitron',sans-serif;font-size:2rem;color:var(--accent-orange);margin:12px 0}
+.game-result{text-align:center;padding:20px}
+.game-result h3{font-family:'Orbitron',sans-serif;color:var(--accent-orange);margin-bottom:8px}
+.game-result p{color:var(--text-secondary);margin-bottom:16px}
+
+/* Game: Click Speed */
+.click-btn{width:140px;height:140px;border-radius:50%;border:3px solid var(--accent-orange);background:rgba(255,107,53,0.1);color:var(--accent-orange);font-family:'Orbitron',sans-serif;font-size:2rem;cursor:pointer;transition:all 0.1s;display:flex;align-items:center;justify-content:center}
+.click-btn:active{transform:scale(0.92);background:rgba(255,107,53,0.25)}
+
+/* Game: Memory Cards */
+.memory-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%;max-width:320px}
+.memory-card{width:100%;aspect-ratio:1;border-radius:8px;border:2px solid var(--border);background:rgba(255,107,53,0.08);display:flex;align-items:center;justify-content:center;font-size:1.5rem;cursor:pointer;transition:all 0.3s;user-select:none}
+.memory-card.flipped{background:rgba(255,107,53,0.15);border-color:var(--accent-orange)}
+.memory-card.matched{background:rgba(46,204,113,0.15);border-color:var(--accent-green)}
+
+/* Game: Reaction */
+.reaction-box{width:100%;height:200px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:600;cursor:pointer;transition:background 0.1s;color:#fff}
+
+/* Game: Math Storm */
+.math-problem{font-family:'Orbitron',sans-serif;font-size:2.5rem;color:var(--text-primary);margin:16px 0}
+.math-input{width:120px;text-align:center;font-size:1.5rem;font-family:'Orbitron',sans-serif}
+
+/* Game: Color辨别 */
+.color-word{font-size:3rem;font-weight:900;margin:16px 0}
+.color-options{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.color-opt{padding:10px 20px;border-radius:20px;border:2px solid var(--border);cursor:pointer;font-weight:600;transition:var(--transition)}
+.color-opt:hover{transform:scale(1.05)}
+
+/* Game: Whack-a-mole */
+.mole-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:280px}
+.mole-hole{width:100%;aspect-ratio:1;border-radius:50%;border:2px solid var(--border);background:rgba(255,107,53,0.05);display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;transition:all 0.15s}
+.mole-hole.active{background:rgba(255,179,71,0.3);border-color:var(--accent-gold);transform:scale(1.1)}
+.mole-hole:active{transform:scale(0.95)}
+
+/* Game timer bar */
+.game-timer-bar{width:100%;height:6px;background:rgba(255,107,53,0.1);border-radius:3px;margin:10px 0;overflow:hidden}
+.game-timer-fill{height:100%;background:linear-gradient(90deg,var(--accent-orange),var(--accent-coral));border-radius:3px;transition:width 0.1s linear}
 </style>
 </head>
 <body>
+
+<!-- Welcome Screen -->
+<div id="welcomeScreen">
+  <canvas class="welcome-canvas" id="welcomeCanvas"></canvas>
+  <div class="welcome-glow" id="welcomeGlow"></div>
+  <div class="welcome-content" id="welcomeContent">
+    <div class="welcome-title" id="welcomeTitle">NEXUS</div>
+    <div class="welcome-subtitle">个人效率仪表盘</div>
+    <div class="welcome-tagline">待办 · 时间 · 习惯 · 资讯 — 一切尽在掌握</div>
+    <button class="welcome-btn" id="welcomeBtn" onclick="enterDashboard()">进入仪表盘 →</button>
+  </div>
+</div>
 
 <canvas id="particleCanvas"></canvas>
 <button class="mobile-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
@@ -309,7 +386,7 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--bg-p
     <div class="nav-item" data-page="settings"><span class="nav-icon">⚙</span>数据管理</div>
   </nav>
   <div class="sidebar-footer">
-    <div class="version">NEXUS v3.1 · Sci-Fi Edition</div>
+    <div class="version">NEXUS v4.0 · Warm Edition</div>
     <div class="data-status" id="dataStatus"></div>
   </div>
 </aside>
@@ -529,7 +606,6 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--bg-p
     <div class="page-subtitle">数据安全 · 备份恢复 · 版本管理</div>
   </div>
 
-  <!-- Data Overview -->
   <div class="card" style="margin-bottom:16px">
     <div class="card-title"><span class="icon">📊</span>数据概览</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:12px">
@@ -542,7 +618,6 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--bg-p
     </div>
   </div>
 
-  <!-- Export / Import -->
   <div class="card" style="margin-bottom:16px">
     <div class="card-title"><span class="icon">💾</span>备份与恢复</div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
@@ -554,24 +629,21 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--bg-p
     <div id="exportPreview" style="margin-top:12px;font-size:.8rem;color:var(--text-secondary)"></div>
   </div>
 
-  <!-- Backup History -->
   <div class="card" style="margin-bottom:16px">
     <div class="card-title"><span class="icon">📋</span>备份历史</div>
     <div id="backupHistory" style="margin-top:12px;max-height:300px;overflow-y:auto"></div>
   </div>
 
-  <!-- Migration Log -->
   <div class="card" style="margin-bottom:16px">
     <div class="card-title"><span class="icon">🔄</span>迁移日志</div>
     <div id="migrationLog" style="margin-top:12px;max-height:200px;overflow-y:auto;font-size:.8rem;color:var(--text-secondary)"></div>
   </div>
 
-  <!-- Danger Zone -->
-  <div class="card" style="border-color:rgba(239,68,68,0.3)">
+  <div class="card" style="border-color:rgba(231,76,60,0.3)">
     <div class="card-title" style="color:var(--accent-red)"><span class="icon">⚠️</span>危险操作</div>
     <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
-      <button class="btn" onclick="clearUserData()" style="border-color:rgba(239,68,68,0.3);color:var(--accent-red)">🗑 清除所有用户数据</button>
-      <button class="btn" onclick="restoreFromLatestBackup()" style="border-color:rgba(251,146,60,0.3);color:var(--accent-orange)">⏪ 恢复到最近备份</button>
+      <button class="btn" onclick="clearUserData()" style="border-color:rgba(231,76,60,0.3);color:var(--accent-red)">🗑 清除所有用户数据</button>
+      <button class="btn" onclick="restoreFromLatestBackup()" style="border-color:rgba(255,179,71,0.3);color:var(--accent-gold)">⏪ 恢复到最近备份</button>
     </div>
     <div style="margin-top:8px;font-size:.75rem;color:var(--text-dim)">⚠ 清除操作不可逆，建议先导出数据备份。恢复操作会覆盖当前数据。</div>
   </div>
@@ -610,257 +682,53 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--bg-p
   </div>
 </div>
 
+<!-- Game Reward Modal -->
+<div class="game-modal-overlay" id="gameModal">
+  <div class="game-modal">
+    <button class="modal-close" onclick="closeGame()">✕</button>
+    <div class="game-title" id="gameTitle"></div>
+    <div class="game-desc" id="gameDesc"></div>
+    <div class="game-timer-bar" id="gameTimerBar" style="display:none"><div class="game-timer-fill" id="gameTimerFill"></div></div>
+    <div class="game-area" id="gameArea"></div>
+  </div>
+</div>
+
 <script>
+
 /* ============ DEFAULT DATA ============ */
 const DEFAULT_NEWS = [
-  {
-    "id": "n1",
-    "title": "中国大模型改写硅谷价格表，智谱GLM-5.2性能比肩美国旗舰",
-    "summary": "路透社报道，智谱AI推出GLM-5.2，编码和代理能力媲美美国领先产品，成本却极低。前白宫AI负责人David Sacks称其与OpenAI和Anthropic模型性能相当。全球前五AI模型中，前四均为中国模型。",
-    "source": "中新经纬",
-    "url": "http://m.toutiao.com/group/7658575361403290138/",
-    "category": "大模型",
-    "date": "2026-07-05",
-    "read": false,
-    "bookmarked": false
-  },
-  {
-    "id": "n2",
-    "title": "GPT-5.6三大子模型曝光：Sol、Terra、Luna，7月7日发布",
-    "summary": "网友在Codex应用代码中发现GPT-5.6的三大子模型标识：sol、terra和luna。OpenAI内部定档7月7日至9日发布。全新「速度拨盘」功能允许用户在速度和质量间自由调节。",
-    "source": "36氪",
-    "url": "https://36kr.com/p/3880971920584962",
-    "category": "大模型",
-    "date": "2026-07-05",
-    "read": false,
-    "bookmarked": false
-  },
-  {
-    "id": "n3",
-    "title": "美团发布万亿参数LongCat-2.0模型并宣布开源",
-    "summary": "美团正式发布新一代万亿参数大模型LongCat-2.0，在五万卡国产算力集群上完成全流程训练，总参数1.6T，预训练数据超30T tokens，原生支持1M超长上下文，并将对外开源。",
-    "source": "钛媒体",
-    "url": "http://m.toutiao.com/group/7658636594840945215/",
-    "category": "大模型",
-    "date": "2026-07-05",
-    "read": false,
-    "bookmarked": false
-  },
-  {
-    "id": "n4",
-    "title": "华为开源盘古openPangu-2.0-Flash：920亿参数",
-    "summary": "华为开源盘古920亿参数的openPangu-2.0-Flash模型正式开源上线，致力于通过昇腾原生训练与推理技术，为业界用好昇腾提供最佳实践参考。",
-    "source": "钛媒体",
-    "url": "http://m.toutiao.com/group/7658636594840945215/",
-    "category": "大模型",
-    "date": "2026-07-05",
-    "read": false,
-    "bookmarked": false
-  },
-  {
-    "id": "n5",
-    "title": "DeepSeek、Qwen受热捧：中国AI周调用量连续八周超美国",
-    "summary": "花旗研报显示，2026年6月OpenRouter平台开源模型Token占比升至65%，中国AI大模型周调用量18.81万亿Token，连续八周超美国，稳居全球首位。DeepSeek、Qwen等成海外企业降本首选。",
-    "source": "中新经纬",
-    "url": "http://m.toutiao.com/group/7658575361403290138/",
-    "category": "大模型",
-    "date": "2026-07-05",
-    "read": false,
-    "bookmarked": false
-  },
-  {
-    "id": "n6",
-    "title": "豆包、千问集体宣布：智能体功能将于7月15日下线",
-    "summary": "7月4日，豆包发布智能体功能下线通知，称由于产品功能调整将于7月15日下线。同日阿里千问APP内也发布类似公告。用户需在10月15日前备份重要数据。",
-    "source": "中国蓝新闻",
-    "url": "http://m.toutiao.com/group/7658565321665692160/",
-    "category": "AI应用",
-    "date": "2026-07-05",
-    "read": false,
-    "bookmarked": false
-  },
-  {
-    "id": "n7",
-    "title": "AI微短剧井喷：一季度全网上线12.8万部，95%为AI制作",
-    "summary": "2026两岸青年峰会期间，台湾导演薛颖穜展示AI动画作品，表示AI已颠覆创作模式。中国网络视听协会数据显示，一季度全网上线微短剧约12.8万部，AI微短剧占比超95%。",
-    "source": "央广网",
-    "url": "http://m.toutiao.com/group/7658633689265340991/",
-    "category": "AI应用",
-    "date": "2026-07-05",
-    "read": false,
-    "bookmarked": false
-  },
-  {
-    "id": "n8",
-    "title": "一人公司OPC崛起：AI工具助力千元的科幻电影入围国际电影节",
-    "summary": "北京宙域锚点科技创始人「鸽九楠」单人借助AI工具制作科幻电影，成本千元左右、半月完工，已入围多个国际电影节。海淀区出台政策支持OPC创业，单户最高支持1000万元贷款。",
-    "source": "证券时报",
-    "url": "http://m.toutiao.com/group/7658546849918075455/",
-    "category": "AI应用",
-    "date": "2026-07-05",
-    "read": false,
-    "bookmarked": false
-  },
-  {
-    "id": "n9",
-    "title": "智平方完成近50亿元融资，刷新AI领域融资纪录",
-    "summary": "据钛媒体数智周报，智平方完成近50亿元融资，刷新AI领域融资纪录。同日可灵AI落地近30亿美元融资，Anthropic推出Claude Science平台。AI行业持续获资本青睐。",
-    "source": "钛媒体",
-    "url": "http://m.toutiao.com/group/7658636594840945215/",
-    "category": "AI应用",
-    "date": "2026-07-05",
-    "read": false,
-    "bookmarked": false
-  },
-  {
-    "id": "n10",
-    "title": "数字经济产业博览会：大模型已深度扎根实体经济",
-    "summary": "2026数字经济产业博览会上，小雨智造焊接机械臂精度达±0.5毫米，智谱GLM-5.2开源模型亮相，AI微短剧、AI清洁机器人等六大展区共同印证大模型已深度扎根具体场景。",
-    "source": "证券时报",
-    "url": "http://m.toutiao.com/group/7658546849918075455/",
-    "category": "行业动态",
-    "date": "2026-07-05",
-    "read": false,
-    "bookmarked": false
-  },
-  {
-    "id": "n11",
-    "title": "银河国际动态因果推理框架发布，被MIT教授评价为十年最重要理论突破",
-    "summary": "银河国际团队发布动态因果推理框架，能从观测数据自动提取因果图，在化工过程控制实验中显著降低工业部署成本。MIT教授本吉奥评价其为近十年最重要的理论突破。",
-    "source": "钛媒体",
-    "url": "http://m.toutiao.com/group/7658636594840945215/",
-    "category": "行业动态",
-    "date": "2026-07-05",
-    "read": false,
-    "bookmarked": false
-  },
-  {
-    "id": "n12",
-    "title": "无界动力发布MWA世界模型，超越英伟达GR00T登顶具身智能榜单",
-    "summary": "无界动力发布全球首个「长时序双向物理因果链」隐空间世界模型MWA™，在斯坦福等顶尖机构联合发起的RoboCasa GR1 TableTop榜单登顶，超越英伟达GR00T-N1.6等主流模型。",
-    "source": "钛媒体",
-    "url": "http://m.toutiao.com/group/7658636594840945215/",
-    "category": "行业动态",
-    "date": "2026-07-05",
-    "read": false,
-    "bookmarked": false
-  },
-  {
-    "id": "n13",
-    "title": "韩国AI预算提高三倍至9.9万亿韩元，志在跻身全球前三",
-    "summary": "韩国政府战略性地重新审视自主AI基础模式构建，将AI预算提高至9.9万亿韩元（去年的三倍），目标是到2030年在物理AI领域跃居全球第一，到2035年建成18.4吉瓦数据中心容量。",
-    "source": "钛媒体",
-    "url": "http://m.toutiao.com/group/7658636594840945215/",
-    "category": "行业动态",
-    "date": "2026-07-05",
-    "read": false,
-    "bookmarked": false
-  },
-  {
-    "id": "n14",
-    "title": "大陆十项涉台新政：支持台湾业者参与AI微短剧创作",
-    "summary": "大陆十项涉台新政明确支持岛内业者参与大陆AI微短剧创作。台湾业界认为这为台湾创作者提供更多机遇，AI重新定义创作门槛，「不必科班出身，只要有好点子，就能实现表达」。",
-    "source": "央广网",
-    "url": "http://m.toutiao.com/group/7658633689265340991/",
-    "category": "政策法规",
-    "date": "2026-07-05",
-    "read": false,
-    "bookmarked": false
-  },
-  {
-    "id": "n15",
-    "title": "微短剧分类分层标准7月1日起正式执行，行业从数量驱动转向质量驱动",
-    "summary": "大陆AI微短剧分类分层标准于7月1日正式执行。台湾导演薛颖穜认为此举有助行业从数量驱动转向质量驱动，期待借大陆资源平台与惠台政策利好，讲好中国故事。",
-    "source": "央广网",
-    "url": "http://m.toutiao.com/group/7658633689265340991/",
-    "category": "政策法规",
-    "date": "2026-07-05",
-    "read": false,
-    "bookmarked": false
-  }
+  {"id":"n1","title":"中国大模型改写硅谷价格表，智谱GLM-5.2性能比肩美国旗舰","summary":"路透社报道，智谱AI推出GLM-5.2，编码和代理能力媲美美国领先产品，成本却极低。前白宫AI负责人David Sacks称其与OpenAI和Anthropic模型性能相当。全球前五AI模型中，前四均为中国模型。","source":"中新经纬","url":"http://m.toutiao.com/group/7658575361403290138/","category":"大模型","date":"2026-07-05","read":false,"bookmarked":false},
+  {"id":"n2","title":"GPT-5.6三大子模型曝光：Sol、Terra、Luna，7月7日发布","summary":"网友在Codex应用代码中发现GPT-5.6的三大子模型标识：sol、terra和luna。OpenAI内部定档7月7日至9日发布。全新「速度拨盘」功能允许用户在速度和质量间自由调节。","source":"36氪","url":"https://36kr.com/p/3880971920584962","category":"大模型","date":"2026-07-05","read":false,"bookmarked":false},
+  {"id":"n3","title":"美团发布万亿参数LongCat-2.0模型并宣布开源","summary":"美团正式发布新一代万亿参数大模型LongCat-2.0，在五万卡国产算力集群上完成全流程训练，总参数1.6T，预训练数据超30T tokens，原生支持1M超长上下文，并将对外开源。","source":"钛媒体","url":"http://m.toutiao.com/group/7658636594840945215/","category":"大模型","date":"2026-07-05","read":false,"bookmarked":false},
+  {"id":"n4","title":"华为开源盘古openPangu-2.0-Flash：920亿参数","summary":"华为开源盘古920亿参数的openPangu-2.0-Flash模型正式开源上线，致力于通过昇腾原生训练与推理技术，为业界用好昇腾提供最佳实践参考。","source":"钛媒体","url":"http://m.toutiao.com/group/7658636594840945215/","category":"大模型","date":"2026-07-05","read":false,"bookmarked":false},
+  {"id":"n5","title":"DeepSeek、Qwen受热捧：中国AI周调用量连续八周超美国","summary":"花旗研报显示，2026年6月OpenRouter平台开源模型Token占比升至65%，中国AI大模型周调用量18.81万亿Token，连续八周超美国，稳居全球首位。DeepSeek、Qwen等成海外企业降本首选。","source":"中新经纬","url":"http://m.toutiao.com/group/7658575361403290138/","category":"大模型","date":"2026-07-05","read":false,"bookmarked":false},
+  {"id":"n6","title":"豆包、千问集体宣布：智能体功能将于7月15日下线","summary":"7月4日，豆包发布智能体功能下线通知，称由于产品功能调整将于7月15日下线。同日阿里千问APP内也发布类似公告。用户需在10月15日前备份重要数据。","source":"中国蓝新闻","url":"http://m.toutiao.com/group/7658565321665692160/","category":"AI应用","date":"2026-07-05","read":false,"bookmarked":false},
+  {"id":"n7","title":"AI微短剧井喷：一季度全网上线12.8万部，95%为AI制作","summary":"2026两岸青年峰会期间，台湾导演薛颖穜展示AI动画作品，表示AI已颠覆创作模式。中国网络视听协会数据显示，一季度全网上线微短剧约12.8万部，AI微短剧占比超95%。","source":"央广网","url":"http://m.toutiao.com/group/7658633689265340991/","category":"AI应用","date":"2026-07-05","read":false,"bookmarked":false},
+  {"id":"n8","title":"一人公司OPC崛起：AI工具助力千元的科幻电影入围国际电影节","summary":"北京宙域锚点科技创始人「鸽九楠」单人借助AI工具制作科幻电影，成本千元左右、半月完工，已入围多个国际电影节。海淀区出台政策支持OPC创业，单户最高支持1000万元贷款。","source":"证券时报","url":"http://m.toutiao.com/group/7658546849918075455/","category":"AI应用","date":"2026-07-05","read":false,"bookmarked":false},
+  {"id":"n9","title":"智平方完成近50亿元融资，刷新AI领域融资纪录","summary":"据钛媒体数智周报，智平方完成近50亿元融资，刷新AI领域融资纪录。同日可灵AI落地近30亿美元融资，Anthropic推出Claude Science平台。AI行业持续获资本青睐。","source":"钛媒体","url":"http://m.toutiao.com/group/7658636594840945215/","category":"AI应用","date":"2026-07-05","read":false,"bookmarked":false},
+  {"id":"n10","title":"数字经济产业博览会：大模型已深度扎根实体经济","summary":"2026数字经济产业博览会上，小雨智造焊接机械臂精度达±0.5毫米，智谱GLM-5.2开源模型亮相，AI微短剧、AI清洁机器人等六大展区共同印证大模型已深度扎根具体场景。","source":"证券时报","url":"http://m.toutiao.com/group/7658546849918075455/","category":"行业动态","date":"2026-07-05","read":false,"bookmarked":false},
+  {"id":"n11","title":"银河国际动态因果推理框架发布，被MIT教授评价为十年最重要理论突破","summary":"银河国际团队发布动态因果推理框架，能从观测数据自动提取因果图，在化工过程控制实验中显著降低工业部署成本。MIT教授本吉奥评价其为近十年最重要的理论突破。","source":"钛媒体","url":"http://m.toutiao.com/group/7658636594840945215/","category":"行业动态","date":"2026-07-05","read":false,"bookmarked":false},
+  {"id":"n12","title":"无界动力发布MWA世界模型，超越英伟达GR00T登顶具身智能榜单","summary":"无界动力发布全球首个「长时序双向物理因果链」隐空间世界模型MWA™，在斯坦福等顶尖机构联合发起的RoboCasa GR1 TableTop榜单登顶，超越英伟达GR00T-N1.6等主流模型。","source":"钛媒体","url":"http://m.toutiao.com/group/7658636594840945215/","category":"行业动态","date":"2026-07-05","read":false,"bookmarked":false},
+  {"id":"n13","title":"韩国AI预算提高三倍至9.9万亿韩元，志在跻身全球前三","summary":"韩国政府战略性地重新审视自主AI基础模式构建，将AI预算提高至9.9万亿韩元（去年的三倍），目标是到2030年在物理AI领域跃居全球第一，到2035年建成18.4吉瓦数据中心容量。","source":"钛媒体","url":"http://m.toutiao.com/group/7658636594840945215/","category":"行业动态","date":"2026-07-05","read":false,"bookmarked":false},
+  {"id":"n14","title":"大陆十项涉台新政：支持台湾业者参与AI微短剧创作","summary":"大陆十项涉台新政明确支持岛内业者参与大陆AI微短剧创作。台湾业界认为这为台湾创作者提供更多机遇，AI重新定义创作门槛，「不必科班出身，只要有好点子，就能实现表达」。","source":"央广网","url":"http://m.toutiao.com/group/7658633689265340991/","category":"政策法规","date":"2026-07-05","read":false,"bookmarked":false},
+  {"id":"n15","title":"微短剧分类分层标准7月1日起正式执行，行业从数量驱动转向质量驱动","summary":"大陆AI微短剧分类分层标准于7月1日正式执行。台湾导演薛颖穜认为此举有助行业从数量驱动转向质量驱动，期待借大陆资源平台与惠台政策利好，讲好中国故事。","source":"央广网","url":"http://m.toutiao.com/group/7658633689265340991/","category":"政策法规","date":"2026-07-05","read":false,"bookmarked":false}
 ];
 
 const DEFAULT_ACADEMIC = [
-  {
-    "id": "a1",
-    "title": "Dynamic Causal Representation Learning: A New Paradigm for Causal AI",
-    "authors": "银河国际团队",
-    "venue": "ICML 2026",
-    "date": "2026-07-05",
-    "summary": "银河国际团队发布动态因果推理框架，能从观测数据自动提取因果图，无需专家知识。MIT教授乔舒亚·本吉奥评价其为近十年最重要的理论突破，被谷歌、微软等争相洽谈合作。",
-    "tags": [
-      "因果推理",
-      "ICML",
-      "理论突破"
-    ],
-    "url": "http://m.toutiao.com/group/7658636594840945215/"
-  },
-  {
-    "id": "a2",
-    "title": "MWA™: Long-term Bidirectional Physical Causal Chain World Model",
-    "authors": "无界动力",
-    "venue": "RoboCasa GR1 TableTop Benchmark",
-    "date": "2026-07-05",
-    "summary": "无界动力发布全球首个「长时序双向物理因果链」隐空间世界模型，通过Chunk级逆向动力学建模，为机器人在多元复杂场景下的长时间连贯精准任务执行提供新方案，登顶具身智能权威榜单。",
-    "tags": [
-      "具身智能",
-      "世界模型",
-      "RoboCasa"
-    ],
-    "url": "http://m.toutiao.com/group/7658636594840945215/"
-  },
-  {
-    "id": "a3",
-    "title": "Elements Claw: AI Agent Discovers 4 New Superconducting Materials",
-    "authors": "阿里达摩院",
-    "venue": "arXiv / 内部预印本",
-    "date": "2026-07-05",
-    "summary": "阿里达摩院联合中国人民大学、中国科学院大学发布首个超导材料发现AI智能体Elements Claw，预测出6.8万个可能的超导材料，其中4种全新材料已合成并证实存在超导性，相关数据全部开放。",
-    "tags": [
-      "AI4Science",
-      "超导材料",
-      "达摩院"
-    ],
-    "url": "http://m.toutiao.com/group/7658636594840945215/"
-  },
-  {
-    "id": "a4",
-    "title": "V2版「韬定律」：面向多层级电子系统的时间缩微理论",
-    "authors": "何庭波（华为半导体负责人）",
-    "venue": "ChinaXiv",
-    "date": "2026-07-05",
-    "summary": "华为何庭波发布「韬定律」V2版本，补充大量工程落地细节、实测量化数据和产品演进路线。新增量产实测数据，明确Kirin2026与Kirin9030Pro的性能对比参数，完善后摩尔时代缩放理论体系。",
-    "tags": [
-      "半导体",
-      "后摩尔定律",
-      "华为"
-    ],
-    "url": "http://m.toutiao.com/group/7658636594840945215/"
-  },
-  {
-    "id": "a5",
-    "title": "上海创智学院首届博士毕业：四力评价体系突破传统人才评价",
-    "authors": "上海创智学院",
-    "venue": "Nature / ICML 2026",
-    "date": "2026-07-05",
-    "summary": "创立不到两年的上海创智学院迎来首届6名博士毕业生。他们采用「四力」评价体系（研究影响力、开发影响力、产业影响力、社会影响力），已孵化26家师生企业，估值超40亿元。",
-    "tags": [
-      "AI教育",
-      "人才培养",
-      "产学研"
-    ],
-    "url": "http://m.toutiao.com/group/7658464641357562418/"
-  }
+  {"id":"a1","title":"Dynamic Causal Representation Learning: A New Paradigm for Causal AI","authors":"银河国际团队","venue":"ICML 2026","date":"2026-07-05","summary":"银河国际团队发布动态因果推理框架，能从观测数据自动提取因果图，无需专家知识。MIT教授乔舒亚·本吉奥评价其为近十年最重要的理论突破，被谷歌、微软等争相洽谈合作。","tags":["因果推理","ICML","理论突破"],"url":"http://m.toutiao.com/group/7658636594840945215/"},
+  {"id":"a2","title":"MWA™: Long-term Bidirectional Physical Causal Chain World Model","authors":"无界动力","venue":"RoboCasa GR1 TableTop Benchmark","date":"2026-07-05","summary":"无界动力发布全球首个「长时序双向物理因果链」隐空间世界模型，通过Chunk级逆向动力学建模，为机器人在多元复杂场景下的长时间连贯精准任务执行提供新方案，登顶具身智能权威榜单。","tags":["具身智能","世界模型","RoboCasa"],"url":"http://m.toutiao.com/group/7658636594840945215/"},
+  {"id":"a3","title":"Elements Claw: AI Agent Discovers 4 New Superconducting Materials","authors":"阿里达摩院","venue":"arXiv / 内部预印本","date":"2026-07-05","summary":"阿里达摩院联合中国人民大学、中国科学院大学发布首个超导材料发现AI智能体Elements Claw，预测出6.8万个可能的超导材料，其中4种全新材料已合成并证实存在超导性，相关数据全部开放。","tags":["AI4Science","超导材料","达摩院"],"url":"http://m.toutiao.com/group/7658636594840945215/"},
+  {"id":"a4","title":"V2版「韬定律」：面向多层级电子系统的时间缩微理论","authors":"何庭波（华为半导体负责人）","venue":"ChinaXiv","date":"2026-07-05","summary":"华为何庭波发布「韬定律」V2版本，补充大量工程落地细节、实测量化数据和产品演进路线。新增量产实测数据，明确Kirin2026与Kirin9030Pro的性能对比参数，完善后摩尔时代缩放理论体系。","tags":["半导体","后摩尔定律","华为"],"url":"http://m.toutiao.com/group/7658636594840945215/"},
+  {"id":"a5","title":"上海创智学院首届博士毕业：四力评价体系突破传统人才评价","authors":"上海创智学院","venue":"Nature / ICML 2026","date":"2026-07-05","summary":"创立不到两年的上海创智学院迎来首届6名博士毕业生。他们采用「四力」评价体系（研究影响力、开发影响力、产业影响力、社会影响力），已孵化26家师生企业，估值超40亿元。","tags":["AI教育","人才培养","产学研"],"url":"http://m.toutiao.com/group/7658464641357562418/"}
 ];
 
 /* ============ DATA PROTECTION SYSTEM ============ */
-const DATA_VERSION = '3.1';
-const STORAGE_KEY = 'nexus_dashboard_v3';
+const DATA_VERSION = '4.0';
+const STORAGE_KEY = 'nexus_dashboard_v4';
 const BACKUP_PREFIX = 'nexus_backup_';
 const MAX_BACKUPS = 10;
 const MIGRATION_LOG_KEY = 'nexus_migration_log';
 
-// Known old storage keys from all previous versions
 const LEGACY_KEYS = [
   'dashboard_data', 'productivity_dashboard', 'app_state',
   'dashboard_state', 'nexus_dashboard', 'nexus_dashboard_v2',
@@ -890,7 +758,7 @@ function getMigrationLog() {
 function addMigrationLog(msg, type='info') {
   const log = getMigrationLog();
   log.unshift({ time: new Date().toISOString(), msg, type });
-  if (log.length > 50) log.length = 50; // keep last 50 entries
+  if (log.length > 50) log.length = 50;
   localStorage.setItem(MIGRATION_LOG_KEY, JSON.stringify(log));
 }
 
@@ -905,7 +773,6 @@ function createAutoBackup() {
       _schemaVersion: state._schemaVersion,
       data: JSON.parse(JSON.stringify(state))
     };
-    // Remove volatile fields from backup
     delete backupData.data.news;
     delete backupData.data.academic;
     localStorage.setItem(backupKey, JSON.stringify(backupData));
@@ -922,7 +789,6 @@ function createAutoBackup() {
 function createManualBackup() {
   const ok = createAutoBackup();
   if (ok) {
-    // Mark as manual
     const keys = getBackupKeys();
     if (keys.length > 0) {
       const latest = keys[keys.length - 1];
@@ -957,34 +823,24 @@ function getBackupKeys() {
   return keys.sort();
 }
 
-/* --- Load State (with migration) --- */
+/* --- Load State --- */
 function loadState() {
   try {
-    // Step 1: Try loading current version data
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       const parsed = JSON.parse(saved);
       Object.assign(state, parsed);
-      // Ensure news/academic always have defaults
       if (!state.news || state.news.length === 0) state.news = JSON.parse(JSON.stringify(DEFAULT_NEWS));
       if (!state.academic || state.academic.length === 0) state.academic = JSON.parse(JSON.stringify(DEFAULT_ACADEMIC));
     }
-
-    // Step 2: Version upgrade check
     const oldVersion = state._schemaVersion || 'unknown';
     if (oldVersion !== DATA_VERSION) {
-      addMigrationLog(`检测到版本变更: ${oldVersion} → ${DATA_VERSION}，执行迁移`, 'info');
+      addMigrationLog('检测到版本变更: ' + oldVersion + ' → ' + DATA_VERSION + '，执行迁移', 'info');
       runVersionMigration(oldVersion);
       state._schemaVersion = DATA_VERSION;
     }
-
-    // Step 3: Migrate from legacy versions
     migrateFromLegacy();
-
-    // Step 4: Data integrity check
     validateStateData();
-
-    // Update status
     updateDataStatus('数据已加载 ✓');
   } catch(e) {
     console.error('Load state error', e);
@@ -995,55 +851,57 @@ function loadState() {
 
 /* --- Version Migration Chain --- */
 function runVersionMigration(fromVersion) {
-  // Each version upgrade step
   const steps = [
     { from: 'unknown', to: '3.0', fn: migrateTo3_0 },
-    { from: '3.0', to: '3.1', fn: migrateTo3_1 }
+    { from: '3.0', to: '3.1', fn: migrateTo3_1 },
+    { from: '3.1', to: '4.0', fn: migrateTo4_0 }
   ];
-
   let current = fromVersion;
   for (const step of steps) {
     if (current === step.from || step.from === 'unknown') {
       try {
         step.fn();
-        addMigrationLog(`迁移 ${step.from} → ${step.to} 完成`, 'success');
+        addMigrationLog('迁移 ' + step.from + ' → ' + step.to + ' 完成', 'success');
         current = step.to;
       } catch(e) {
-        addMigrationLog(`迁移 ${step.from} → ${step.to} 失败: ${e.message}`, 'warn');
+        addMigrationLog('迁移 ' + step.from + ' → ' + step.to + ' 失败: ' + e.message, 'warn');
       }
     }
   }
 }
 
 function migrateTo3_0() {
-  // Initial schema normalization - ensure all expected fields exist
   if (!Array.isArray(state.todos)) state.todos = [];
   if (!Array.isArray(state.timeLogs)) state.timeLogs = [];
   if (!Array.isArray(state.habits)) state.habits = [];
-  // Normalize habit structure
   state.habits.forEach(h => {
     if (!h.checkins) h.checkins = {};
     if (!h.id) h.id = Date.now() + Math.random();
     if (!h.emoji) h.emoji = '⭐';
-    if (!h.color) h.color = '#00d4ff';
+    if (!h.color) h.color = '#FF6B35';
   });
 }
 
 function migrateTo3_1() {
-  // 3.1: Add data protection metadata
   state._lastSaved = new Date().toISOString();
   state._lastBackup = null;
-  // Ensure all habits have createdAt
   state.habits.forEach(h => {
     if (!h.createdAt) h.createdAt = new Date().toISOString();
   });
 }
 
+function migrateTo4_0() {
+  // V4.0 migration: update colors and add welcome screen flag
+  state.habits.forEach(h => {
+    if (h.color === '#00d4ff') h.color = '#FF6B35';
+    if (h.color === '#7c3aed') h.color = '#9B6BFF';
+  });
+  addMigrationLog('V4.0暖色主题迁移完成', 'success');
+}
+
 /* --- Legacy Data Migration --- */
 function migrateFromLegacy() {
   let migrated = false;
-
-  // Check known legacy keys
   for (const key of LEGACY_KEYS) {
     if (key === STORAGE_KEY) continue;
     try {
@@ -1052,13 +910,11 @@ function migrateFromLegacy() {
         const parsed = JSON.parse(data);
         if (mergeLegacyData(parsed, key)) {
           migrated = true;
-          addMigrationLog(`从 "${key}" 迁移用户数据成功`, 'success');
+          addMigrationLog('从 "' + key + '" 迁移用户数据成功', 'success');
         }
       }
     } catch(e) { /* skip */ }
   }
-
-  // Scan ALL localStorage for unrecognized dashboard data
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
     if (!key || LEGACY_KEYS.includes(key) || key.startsWith(BACKUP_PREFIX) || key === MIGRATION_LOG_KEY || key === STORAGE_KEY) continue;
@@ -1067,21 +923,16 @@ function migrateFromLegacy() {
       if (parsed && typeof parsed === 'object' && (Array.isArray(parsed.habits) || Array.isArray(parsed.todos))) {
         if (mergeLegacyData(parsed, key)) {
           migrated = true;
-          addMigrationLog(`从未知来源 "${key}" 发现并迁移数据`, 'success');
+          addMigrationLog('从未知来源 "' + key + '" 发现并迁移数据', 'success');
         }
       }
     } catch(e) { /* skip */ }
   }
-
-  if (migrated) {
-    saveState();
-  }
+  if (migrated) { saveState(); }
 }
 
 function mergeLegacyData(data, sourceKey) {
   let merged = false;
-
-  // Merge habits
   if (Array.isArray(data.habits) && data.habits.length > 0) {
     const existingNames = new Set(state.habits.map(h => h.name));
     for (const habit of data.habits) {
@@ -1091,7 +942,7 @@ function mergeLegacyData(data, sourceKey) {
           id: habit.id || Date.now() + Math.random(),
           name: habit.name,
           emoji: habit.emoji || '⭐',
-          color: habit.color || '#00d4ff',
+          color: habit.color || '#FF6B35',
           checkins: habit.checkins || {},
           createdAt: habit.createdAt || new Date().toISOString()
         });
@@ -1107,8 +958,6 @@ function mergeLegacyData(data, sourceKey) {
       }
     }
   }
-
-  // Merge todos
   if (Array.isArray(data.todos) && data.todos.length > 0) {
     const existingKeys = new Set(state.todos.map(t => (t.text||'') + '|' + (t.date||'')));
     for (const todo of data.todos) {
@@ -1126,8 +975,6 @@ function mergeLegacyData(data, sourceKey) {
       }
     }
   }
-
-  // Merge time logs
   if (Array.isArray(data.timeLogs) && data.timeLogs.length > 0) {
     const existingKeys = new Set(state.timeLogs.map(l => (l.task||'')+'|'+(l.date||'')+'|'+(l.duration||0)));
     for (const log of data.timeLogs) {
@@ -1139,7 +986,6 @@ function mergeLegacyData(data, sourceKey) {
       }
     }
   }
-
   return merged;
 }
 
@@ -1149,10 +995,8 @@ function validateStateData() {
   if (!Array.isArray(state.todos)) { state.todos = []; fixed = true; }
   if (!Array.isArray(state.timeLogs)) { state.timeLogs = []; fixed = true; }
   if (!Array.isArray(state.habits)) { state.habits = []; fixed = true; }
-  // Fix broken habits
   state.habits = state.habits.filter(h => h && h.name);
   state.habits.forEach(h => { if (!h.checkins || typeof h.checkins !== 'object') h.checkins = {}; });
-  // Fix broken todos
   state.todos = state.todos.filter(t => t && t.text);
   if (fixed) {
     addMigrationLog('数据完整性修复：修正了异常字段', 'warn');
@@ -1160,14 +1004,11 @@ function validateStateData() {
   }
 }
 
-/* --- Save State (with auto-backup) --- */
+/* --- Save State --- */
 function saveState() {
   try {
-    // Auto-backup before save (only if there's existing data to backup)
     const existingData = localStorage.getItem(STORAGE_KEY);
-    if (existingData && existingData.length > 50) {
-      createAutoBackup();
-    }
+    if (existingData && existingData.length > 50) { createAutoBackup(); }
     state._lastSaved = new Date().toISOString();
     state._schemaVersion = DATA_VERSION;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -1200,14 +1041,14 @@ function exportData() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `nexus-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.download = 'nexus-backup-' + new Date().toISOString().slice(0,10) + '.json';
   a.click();
   URL.revokeObjectURL(url);
   addMigrationLog('数据导出成功', 'success');
   const preview = document.getElementById('exportPreview');
   if (preview) {
     const totalCheckins = state.habits.reduce((s,h) => s + Object.keys(h.checkins||{}).length, 0);
-    preview.innerHTML = `✅ 已导出：${state.todos.length} 条待办 · ${state.timeLogs.length} 条时间记录 · ${state.habits.length} 个习惯(${totalCheckins}次打卡)`;
+    preview.innerHTML = '✅ 已导出：' + state.todos.length + ' 条待办 · ' + state.timeLogs.length + ' 条时间记录 · ' + state.habits.length + ' 个习惯(' + totalCheckins + '次打卡)';
   }
 }
 
@@ -1221,10 +1062,8 @@ function importData(event) {
       if (!imported._app || !imported._app.includes('NEXUS')) {
         if (!confirm('⚠️ 该文件似乎不是 NEXUS 仪表盘的备份文件。是否仍要导入？')) return;
       }
-      // Backup current data before import
       createAutoBackup();
       let importCount = 0;
-      // Merge imported data
       if (Array.isArray(imported.habits)) {
         const names = new Set(state.habits.map(h=>h.name));
         imported.habits.forEach(h => {
@@ -1250,8 +1089,8 @@ function importData(event) {
         });
       }
       saveState();
-      addMigrationLog(`从文件 "${file.name}" 导入成功，新增 ${importCount} 条数据`, 'success');
-      alert(`✅ 导入成功！新增 ${importCount} 条数据。\n（导入前已自动备份当前数据）`);
+      addMigrationLog('从文件 "' + file.name + '" 导入成功，新增 ' + importCount + ' 条数据', 'success');
+      alert('✅ 导入成功！新增 ' + importCount + ' 条数据。\n（导入前已自动备份当前数据）');
       refreshSettingsPage();
       refreshDashboard();
     } catch(err) {
@@ -1260,14 +1099,13 @@ function importData(event) {
     }
   };
   reader.readAsText(file);
-  event.target.value = ''; // reset file input
+  event.target.value = '';
 }
 
 /* --- Clear / Restore --- */
 function clearUserData() {
   if (!confirm('⚠️ 确定要清除所有用户数据吗？\n\n此操作不可逆！建议先导出数据备份。\n\n将清除：待办事项、时间记录、习惯打卡及所有打卡记录。')) return;
   if (!confirm('再次确认：真的要清除所有数据吗？')) return;
-  // Backup before clear
   createAutoBackup();
   state.todos = [];
   state.timeLogs = [];
@@ -1289,14 +1127,14 @@ function restoreFromLatestBackup() {
   const latestKey = keys[keys.length - 1];
   try {
     const backup = JSON.parse(localStorage.getItem(latestKey));
-    if (!confirm(`⚠️ 将恢复到 ${new Date(backup._backupTime).toLocaleString()} 的备份数据。\n\n当前数据将被覆盖（恢复前会自动备份）。`)) return;
+    if (!confirm('⚠️ 将恢复到 ' + new Date(backup._backupTime).toLocaleString() + ' 的备份数据。\n\n当前数据将被覆盖（恢复前会自动备份）。')) return;
     createAutoBackup();
     const data = backup.data;
     if (data.todos) state.todos = data.todos;
     if (data.timeLogs) state.timeLogs = data.timeLogs;
     if (data.habits) state.habits = data.habits;
     saveState();
-    addMigrationLog(`从备份恢复到 ${backup._backupTime}`, 'success');
+    addMigrationLog('从备份恢复到 ' + backup._backupTime, 'success');
     refreshSettingsPage();
     refreshDashboard();
     renderTodos(); renderHabits(); renderNews();
@@ -1314,25 +1152,17 @@ function refreshSettingsPage() {
   if (el('setStatTimeLogs')) el('setStatTimeLogs').textContent = state.timeLogs.length;
   if (el('setStatHabits')) el('setStatHabits').textContent = state.habits.length;
   if (el('setStatCheckins')) el('setStatCheckins').textContent = totalCheckins;
-
-  // Backup count
   const backupKeys = getBackupKeys();
   if (el('setStatBackups')) el('setStatBackups').textContent = backupKeys.length;
   if (el('setStatVersion')) el('setStatVersion').textContent = 'v' + DATA_VERSION;
-
-  // Render backup history
   renderBackupHistory(backupKeys);
-  // Render migration log
   renderMigrationLog();
 }
 
 function renderBackupHistory(keys) {
   const el = document.getElementById('backupHistory');
   if (!el) return;
-  if (keys.length === 0) {
-    el.innerHTML = '<div class="empty-state"><p>暂无备份记录</p></div>';
-    return;
-  }
+  if (keys.length === 0) { el.innerHTML = '<div class="empty-state"><p>暂无备份记录</p></div>'; return; }
   el.innerHTML = keys.reverse().map(key => {
     try {
       const backup = JSON.parse(localStorage.getItem(key));
@@ -1341,20 +1171,11 @@ function renderBackupHistory(keys) {
       const type = backup._backupType === 'manual' ? '🔒 手动' : '🔄 自动';
       const dataSize = (localStorage.getItem(key) || '').length;
       const sizeStr = dataSize > 1024 ? (dataSize/1024).toFixed(1)+'KB' : dataSize+'B';
-      const habitsCount = (backup.data?.habits || []).length;
-      const todosCount = (backup.data?.todos || []).length;
-      return `<div class="backup-item">
-        <div class="backup-info">
-          <div class="backup-time">${timeStr}</div>
-          <div class="backup-meta">${type} · ${sizeStr} · ${habitsCount}个习惯 · ${todosCount}条待办 · v${backup._schemaVersion||'?'}</div>
-        </div>
-        <div class="backup-actions">
-          <button class="backup-btn restore" onclick="restoreFromBackup('${key}')">恢复</button>
-          <button class="backup-btn delete" onclick="deleteBackup('${key}')">删除</button>
-        </div>
-      </div>`;
+      const habitsCount = (backup.data && backup.data.habits ? backup.data.habits : []).length;
+      const todosCount = (backup.data && backup.data.todos ? backup.data.todos : []).length;
+      return '<div class="backup-item"><div class="backup-info"><div class="backup-time">' + timeStr + '</div><div class="backup-meta">' + type + ' · ' + sizeStr + ' · ' + habitsCount + '个习惯 · ' + todosCount + '条待办 · v' + (backup._schemaVersion||'?') + '</div></div><div class="backup-actions"><button class="backup-btn restore" onclick="restoreFromBackup(\'' + key + '\')">恢复</button><button class="backup-btn delete" onclick="deleteBackup(\'' + key + '\')">删除</button></div></div>';
     } catch(e) {
-      return `<div class="backup-item"><div class="backup-info"><div class="backup-time">${key}</div><div class="backup-meta">数据异常</div></div><div class="backup-actions"><button class="backup-btn delete" onclick="deleteBackup('${key}')">删除</button></div></div>`;
+      return '<div class="backup-item"><div class="backup-info"><div class="backup-time">' + key + '</div><div class="backup-meta">数据异常</div></div><div class="backup-actions"><button class="backup-btn delete" onclick="deleteBackup(\'' + key + '\')">删除</button></div></div>';
     }
   }).join('');
 }
@@ -1363,29 +1184,26 @@ function renderMigrationLog() {
   const el = document.getElementById('migrationLog');
   if (!el) return;
   const log = getMigrationLog();
-  if (log.length === 0) {
-    el.innerHTML = '<div style="color:var(--text-dim)">暂无迁移记录</div>';
-    return;
-  }
+  if (log.length === 0) { el.innerHTML = '<div style="color:var(--text-dim)">暂无迁移记录</div>'; return; }
   el.innerHTML = log.slice(0, 20).map(entry => {
     const time = new Date(entry.time).toLocaleString();
     const cls = entry.type === 'success' ? 'log-success' : entry.type === 'warn' ? 'log-warn' : 'log-info';
     const icon = entry.type === 'success' ? '✅' : entry.type === 'warn' ? '⚠️' : 'ℹ️';
-    return `<div class="log-entry"><span class="log-time">${time}</span><span class="log-msg ${cls}">${icon} ${entry.msg}</span></div>`;
+    return '<div class="log-entry"><span class="log-time">' + time + '</span><span class="log-msg ' + cls + '">' + icon + ' ' + entry.msg + '</span></div>';
   }).join('');
 }
 
 function restoreFromBackup(key) {
   try {
     const backup = JSON.parse(localStorage.getItem(key));
-    if (!confirm(`确定恢复到 ${new Date(backup._backupTime).toLocaleString()} 的数据？`)) return;
+    if (!confirm('确定恢复到 ' + new Date(backup._backupTime).toLocaleString() + ' 的数据？')) return;
     createAutoBackup();
     const data = backup.data;
     if (data.todos) state.todos = data.todos;
     if (data.timeLogs) state.timeLogs = data.timeLogs;
     if (data.habits) state.habits = data.habits;
     saveState();
-    addMigrationLog(`从备份恢复: ${backup._backupTime}`, 'success');
+    addMigrationLog('从备份恢复: ' + backup._backupTime, 'success');
     refreshSettingsPage();
     refreshDashboard();
     renderTodos(); renderHabits(); renderNews();
@@ -1400,16 +1218,121 @@ function deleteBackup(key) {
   refreshSettingsPage();
 }
 
+/* ============ WELCOME SCREEN ============ */
+(function initWelcome() {
+  if (localStorage.getItem('nexus_welcome_v4_done')) {
+    document.getElementById('welcomeScreen').style.display = 'none';
+    return;
+  }
+  const canvas = document.getElementById('welcomeCanvas');
+  const ctx = canvas.getContext('2d');
+  const glow = document.getElementById('welcomeGlow');
+  const content = document.getElementById('welcomeContent');
+  const title = document.getElementById('welcomeTitle');
+  let particles = [];
+  let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Welcome particles
+  for (let i = 0; i < 100; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.8,
+      vy: (Math.random() - 0.5) * 0.8,
+      r: Math.random() * 3 + 1,
+      color: ['rgba(255,107,53,','rgba(255,179,71,','rgba(232,93,117,','rgba(155,107,255,'][Math.floor(Math.random()*4)]
+    });
+  }
+
+  document.addEventListener('mousemove', function(e) {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+    // Glow follow
+    if (glow) {
+      glow.style.left = e.clientX + 'px';
+      glow.style.top = e.clientY + 'px';
+      glow.style.opacity = '1';
+    }
+    // Title parallax
+    if (title) {
+      const cx = window.innerWidth / 2;
+      const cy = window.innerHeight / 2;
+      const rx = (e.clientY - cy) / cy * -5;
+      const ry = (e.clientX - cx) / cx * 5;
+      title.style.transform = 'perspective(1000px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)';
+    }
+  });
+
+  function animate() {
+    if (document.getElementById('welcomeScreen').style.display === 'none') return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      const dx = p.x - mouse.x;
+      const dy = p.y - mouse.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 150 && dist > 0) {
+        const force = (150 - dist) / 150 * 0.03;
+        p.vx += dx/dist * force;
+        p.vy += dy/dist * force;
+      }
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vx *= 0.998;
+      p.vy *= 0.998;
+      if (p.x < 0) p.x = canvas.width;
+      if (p.x > canvas.width) p.x = 0;
+      if (p.y < 0) p.y = canvas.height;
+      if (p.y > canvas.height) p.y = 0;
+      const alpha = 0.3 + Math.sin(Date.now()*0.002 + p.x*0.01) * 0.2;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = p.color + alpha + ')';
+      ctx.fill();
+    });
+    // Lines
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i+1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 100) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = 'rgba(255,107,53,' + ((1-dist/100)*0.12) + ')';
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+function enterDashboard() {
+  localStorage.setItem('nexus_welcome_v4_done', '1');
+  const ws = document.getElementById('welcomeScreen');
+  ws.classList.add('fade-out');
+  setTimeout(function() { ws.style.display = 'none'; }, 800);
+}
+
 /* ============ NAVIGATION ============ */
-document.querySelectorAll('.nav-item').forEach(item => {
-  item.addEventListener('click', () => {
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+document.querySelectorAll('.nav-item').forEach(function(item) {
+  item.addEventListener('click', function() {
+    document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
     item.classList.add('active');
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
     document.getElementById('page-' + item.dataset.page).classList.add('active');
     document.querySelector('.sidebar').classList.remove('open');
-    // Refresh charts on page switch
-    setTimeout(() => {
+    setTimeout(function() {
       if (item.dataset.page === 'dashboard') refreshDashboard();
       if (item.dataset.page === 'timer') refreshTimerPage();
       if (item.dataset.page === 'habits') refreshHabitsPage();
@@ -1420,52 +1343,50 @@ document.querySelectorAll('.nav-item').forEach(item => {
 
 /* ============ CLOCK & DATE ============ */
 function updateClock() {
-  const now = new Date();
-  const h = String(now.getHours()).padStart(2, '0');
-  const m = String(now.getMinutes()).padStart(2, '0');
-  const s = String(now.getSeconds()).padStart(2, '0');
-  const el = document.getElementById('realTimeClock');
-  if (el) el.textContent = `${h}:${m}:${s}`;
+  var now = new Date();
+  var h = String(now.getHours()).padStart(2, '0');
+  var m = String(now.getMinutes()).padStart(2, '0');
+  var s = String(now.getSeconds()).padStart(2, '0');
+  var el = document.getElementById('realTimeClock');
+  if (el) el.textContent = h + ':' + m + ':' + s;
 }
 setInterval(updateClock, 1000);
 updateClock();
 
 function updateDate() {
-  const now = new Date();
-  const days = ['日','一','二','三','四','五','六'];
-  const el = document.getElementById('sidebarDate');
-  if (el) el.textContent = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 星期${days[now.getDay()]}`;
+  var now = new Date();
+  var days = ['日','一','二','三','四','五','六'];
+  var el = document.getElementById('sidebarDate');
+  if (el) el.textContent = now.getFullYear() + '年' + (now.getMonth()+1) + '月' + now.getDate() + '日 星期' + days[now.getDay()];
 }
 updateDate();
 
 /* ============ WEATHER ============ */
 async function getWeather() {
-  return new Promise((resolve) => {
+  return new Promise(function(resolve) {
     if (!navigator.geolocation) { resolve(null); return; }
-    navigator.geolocation.getCurrentPosition(async (pos) => {
+    navigator.geolocation.getCurrentPosition(async function(pos) {
       try {
-        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&current_weather=true`);
-        const data = await res.json();
-        const codes = {0:'☀️晴',1:'🌤晴间多云',2:'⛅多云',3:'☁️阴',45:'🌫雾',48:'🌫雾凇',51:'🌦小毛毛雨',53:'🌦毛毛雨',55:'🌧大毛毛雨',61:'🌧小雨',63:'🌧中雨',65:'🌧大雨',71:'🌨小雪',73:'🌨中雪',75:'🌨大雪',80:'🌦阵雨',81:'🌧中阵雨',82:'🌧大阵雨',95:'⛈雷暴',96:'⛈雷暴冰雹',99:'⛈强雷暴冰雹'};
-        const w = codes[data.current_weather.weathercode] || '🌡未知';
+        var res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=' + pos.coords.latitude + '&longitude=' + pos.coords.longitude + '&current_weather=true');
+        var data = await res.json();
+        var codes = {0:'☀️晴',1:'🌤晴间多云',2:'⛅多云',3:'☁️阴',45:'🌫雾',48:'🌫雾凇',51:'🌦小毛毛雨',53:'🌦毛毛雨',55:'🌧大毛毛雨',61:'🌧小雨',63:'🌧中雨',65:'🌧大雨',71:'🌨小雪',73:'🌨中雪',75:'🌨大雪',80:'🌦阵雨',81:'🌧中阵雨',82:'🌧大阵雨',95:'⛈雷暴',96:'⛈雷暴冰雹',99:'⛈强雷暴冰雹'};
+        var w = codes[data.current_weather.weathercode] || '🌡未知';
         resolve({ temp: data.current_weather.temperature, desc: w, code: data.current_weather.weathercode });
       } catch(e) { resolve(null); }
-    }, () => resolve(null), { timeout: 5000 });
+    }, function() { resolve(null); }, { timeout: 5000 });
   });
 }
 
 /* ============ TODOS ============ */
-let todoFilterCat = 'all';
-
 function openTodoModal() { document.getElementById('todoModal').classList.add('show'); document.getElementById('todoInput').focus(); }
 function closeTodoModal() { document.getElementById('todoModal').classList.remove('show'); document.getElementById('todoInput').value = ''; }
 
 function addTodo() {
-  const text = document.getElementById('todoInput').value.trim();
+  var text = document.getElementById('todoInput').value.trim();
   if (!text) return;
   state.todos.push({
     id: Date.now().toString(),
-    text,
+    text: text,
     completed: false,
     category: document.getElementById('todoCategory').value,
     priority: document.getElementById('todoPriority').value,
@@ -1479,69 +1400,57 @@ function addTodo() {
 }
 
 function toggleTodo(id) {
-  const t = state.todos.find(t => t.id === id);
+  var t = state.todos.find(function(t) { return t.id === id; });
   if (t) { t.completed = !t.completed; saveState(); renderTodos(); refreshDashboard(); }
 }
 
 function deleteTodo(id) {
-  state.todos = state.todos.filter(t => t.id !== id);
+  state.todos = state.todos.filter(function(t) { return t.id !== id; });
   saveState(); renderTodos(); refreshDashboard();
 }
 
 function setTodoFilter(f, el) {
   state.todoFilter = f;
-  el.parentElement.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  el.parentElement.querySelectorAll('.filter-pill').forEach(function(p) { p.classList.remove('active'); });
   el.classList.add('active');
   renderTodos();
 }
 
 function renderTodos() {
-  const search = (document.getElementById('todoSearch')?.value || '').toLowerCase();
-  const catF = document.getElementById('todoCatFilter')?.value || 'all';
-  let items = state.todos.filter(t => {
+  var search = (document.getElementById('todoSearch') ? document.getElementById('todoSearch').value : '').toLowerCase();
+  var catF = document.getElementById('todoCatFilter') ? document.getElementById('todoCatFilter').value : 'all';
+  var items = state.todos.filter(function(t) {
     if (state.todoFilter === 'active' && t.completed) return false;
     if (state.todoFilter === 'completed' && !t.completed) return false;
     if (catF !== 'all' && t.category !== catF) return false;
     if (search && !t.text.toLowerCase().includes(search)) return false;
     return true;
   });
-  const priorityOrder = { high: 0, medium: 1, low: 2 };
-  items.sort((a, b) => (a.completed - b.completed) || (priorityOrder[a.priority] - priorityOrder[b.priority]));
-  const container = document.getElementById('todoList');
+  var priorityOrder = { high: 0, medium: 1, low: 2 };
+  items.sort(function(a, b) { return (a.completed - b.completed) || (priorityOrder[a.priority] - priorityOrder[b.priority]); });
+  var container = document.getElementById('todoList');
   if (!container) return;
-  if (items.length === 0) {
-    container.innerHTML = '<div class="empty-state"><div class="icon">☑</div><p>暂无任务</p></div>';
-    return;
-  }
-  container.innerHTML = items.map(t => {
-    const pClass = 'priority-' + t.priority;
-    const pIcon = t.priority === 'high' ? '🔴' : t.priority === 'medium' ? '🟡' : '🟢';
-    const catClass = t.category === '工作' ? 'tag-cyan' : t.category === '学习' ? 'tag-purple' : t.category === '项目' ? 'tag-orange' : 'tag-green';
-    return `<div class="todo-item ${t.completed ? 'completed' : ''}">
-      <div class="todo-check ${t.completed ? 'checked' : ''}" onclick="toggleTodo('${t.id}')"></div>
-      <span class="todo-text">${escHtml(t.text)}</span>
-      <div class="todo-meta">
-        <span class="tag ${catClass}">${t.category}</span>
-        <span style="font-size:.75rem" title="优先级">${pIcon}</span>
-        ${t.dueDate ? `<span style="font-size:.7rem;color:var(--text-dim)">${t.dueDate}</span>` : ''}
-        <span class="todo-delete" onclick="deleteTodo('${t.id}')">✕</span>
-      </div>
-    </div>`;
+  if (items.length === 0) { container.innerHTML = '<div class="empty-state"><div class="icon">☑</div><p>暂无任务</p></div>'; return; }
+  container.innerHTML = items.map(function(t) {
+    var pClass = 'priority-' + t.priority;
+    var pIcon = t.priority === 'high' ? '🔴' : t.priority === 'medium' ? '🟡' : '🟢';
+    var catClass = t.category === '工作' ? 'tag-orange' : t.category === '学习' ? 'tag-purple' : t.category === '项目' ? 'tag-gold' : 'tag-green';
+    return '<div class="todo-item ' + (t.completed ? 'completed' : '') + '"><div class="todo-check ' + (t.completed ? 'checked' : '') + '" onclick="toggleTodo(\'' + t.id + '\')"></div><span class="todo-text">' + escHtml(t.text) + '</span><div class="todo-meta"><span class="tag ' + catClass + '">' + t.category + '</span><span style="font-size:.75rem" title="优先级">' + pIcon + '</span>' + (t.dueDate ? '<span style="font-size:.7rem;color:var(--text-dim)">' + t.dueDate + '</span>' : '') + '<span class="todo-delete" onclick="deleteTodo(\'' + t.id + '\')">✕</span></div></div>';
   }).join('');
 }
 
 /* ============ TIMER ============ */
-let timerInterval = null;
-let timerSeconds = 0;
-let timerRunning = false;
-let timerFocusEnd = 0;
-let timerFocusMode = 0;
+var timerInterval = null;
+var timerSeconds = 0;
+var timerRunning = false;
+var timerFocusEnd = 0;
+var timerFocusMode = 0;
 
 function formatTime(s) {
-  const h = String(Math.floor(s / 3600)).padStart(2, '0');
-  const m = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
-  const sec = String(s % 60).padStart(2, '0');
-  return `${h}:${m}:${sec}`;
+  var h = String(Math.floor(s / 3600)).padStart(2, '0');
+  var m = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
+  var sec = String(s % 60).padStart(2, '0');
+  return h + ':' + m + ':' + sec;
 }
 
 function toggleTimer() {
@@ -1555,7 +1464,7 @@ function toggleTimer() {
       timerFocusEnd = Date.now() + timerFocusMode * 60 * 1000;
     }
     document.getElementById('timerStartBtn').innerHTML = '⏸ 暂停';
-    timerInterval = setInterval(() => {
+    timerInterval = setInterval(function() {
       timerSeconds++;
       document.getElementById('timerDisplay').textContent = formatTime(timerSeconds);
       if (timerFocusMode > 0 && Date.now() >= timerFocusEnd) {
@@ -1580,10 +1489,10 @@ function resetTimer() {
 
 function saveTimeLog() {
   if (timerSeconds < 5) return alert('计时太短，未保存');
-  const project = document.getElementById('timerProject').value.trim() || '未命名';
+  var project = document.getElementById('timerProject').value.trim() || '未命名';
   state.timeLogs.push({
     id: Date.now().toString(),
-    project,
+    project: project,
     seconds: timerSeconds,
     date: new Date().toISOString(),
     day: new Date().toLocaleDateString('zh-CN')
@@ -1595,7 +1504,7 @@ function saveTimeLog() {
 }
 
 function setFocusMode(min, el) {
-  document.querySelectorAll('.focus-mode').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.focus-mode').forEach(function(b) { b.classList.remove('active'); });
   el.classList.add('active');
   timerFocusMode = min;
   timerFocusEnd = 0;
@@ -1612,30 +1521,21 @@ function refreshTimerPage() {
 }
 
 function renderTodayTimeLog() {
-  const today = new Date().toLocaleDateString('zh-CN');
-  const logs = state.timeLogs.filter(l => l.day === today);
-  const el = document.getElementById('todayTimeLog');
+  var today = new Date().toLocaleDateString('zh-CN');
+  var logs = state.timeLogs.filter(function(l) { return l.day === today; });
+  var el = document.getElementById('todayTimeLog');
   if (!el) return;
   if (logs.length === 0) { el.innerHTML = '<div class="empty-state"><p>今日暂无记录</p></div>'; return; }
-  const colors = ['var(--accent-cyan)','var(--accent-purple)','var(--accent-green)','var(--accent-pink)','var(--accent-orange)'];
-  el.innerHTML = logs.map((l, i) => `<div class="time-entry">
-    <span class="time-dot" style="background:${colors[i % colors.length]}"></span>
-    <span class="time-project">${escHtml(l.project)}</span>
-    <span class="time-duration">${formatTime(l.seconds)}</span>
-  </div>`).join('');
+  var colors = ['var(--accent-orange)','var(--accent-purple)','var(--accent-green)','var(--accent-coral)','var(--accent-gold)'];
+  el.innerHTML = logs.map(function(l, i) { return '<div class="time-entry"><span class="time-dot" style="background:' + colors[i % colors.length] + '"></span><span class="time-project">' + escHtml(l.project) + '</span><span class="time-duration">' + formatTime(l.seconds) + '</span></div>'; }).join('');
 }
 
 function renderAllTimeLog() {
-  const el = document.getElementById('allTimeLog');
+  var el = document.getElementById('allTimeLog');
   if (!el) return;
   if (state.timeLogs.length === 0) { el.innerHTML = '<div class="empty-state"><p>暂无记录</p></div>'; return; }
-  const sorted = [...state.timeLogs].sort((a, b) => new Date(b.date) - new Date(a.date));
-  el.innerHTML = sorted.slice(0, 30).map(l => `<div class="time-entry">
-    <span class="time-dot" style="background:var(--accent-cyan)"></span>
-    <span class="time-project">${escHtml(l.project)}</span>
-    <span class="time-date">${l.day}</span>
-    <span class="time-duration">${formatTime(l.seconds)}</span>
-  </div>`).join('');
+  var sorted = state.timeLogs.slice().sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
+  el.innerHTML = sorted.slice(0, 30).map(function(l) { return '<div class="time-entry"><span class="time-dot" style="background:var(--accent-orange)"></span><span class="time-project">' + escHtml(l.project) + '</span><span class="time-date">' + l.day + '</span><span class="time-duration">' + formatTime(l.seconds) + '</span></div>'; }).join('');
 }
 
 /* ============ HABITS ============ */
@@ -1643,11 +1543,11 @@ function openHabitModal() { document.getElementById('habitModal').classList.add(
 function closeHabitModal() { document.getElementById('habitModal').classList.remove('show'); document.getElementById('habitInput').value = ''; }
 
 function addHabit() {
-  const name = document.getElementById('habitInput').value.trim();
+  var name = document.getElementById('habitInput').value.trim();
   if (!name) return;
   state.habits.push({
     id: Date.now().toString(),
-    name,
+    name: name,
     icon: document.getElementById('habitIcon').value,
     checkins: {},
     createdAt: new Date().toISOString()
@@ -1660,78 +1560,64 @@ function addHabit() {
 
 function deleteHabit(id) {
   if (!confirm('确定删除此习惯？')) return;
-  state.habits = state.habits.filter(h => h.id !== id);
+  state.habits = state.habits.filter(function(h) { return h.id !== id; });
   saveState(); renderHabits(); refreshDashboard();
 }
 
 async function checkinHabit(id) {
-  const today = new Date().toISOString().slice(0, 10);
-  const habit = state.habits.find(h => h.id === id);
+  var today = new Date().toISOString().slice(0, 10);
+  var habit = state.habits.find(function(h) { return h.id === id; });
   if (!habit || habit.checkins[today]) return;
-  const weather = await getWeather();
+  var weather = await getWeather();
   habit.checkins[today] = {
     time: new Date().toISOString(),
-    weather: weather ? `${weather.desc} ${weather.temp}°C` : null
+    weather: weather ? weather.desc + ' ' + weather.temp + '°C' : null
   };
   saveState();
   renderHabits();
   refreshDashboard();
+  // Trigger random mini-game
+  triggerRandomGame();
 }
 
 function getHabitStreak(habit) {
-  let streak = 0;
-  const d = new Date();
+  var streak = 0;
+  var d = new Date();
   while (true) {
-    const key = d.toISOString().slice(0, 10);
+    var key = d.toISOString().slice(0, 10);
     if (habit.checkins[key]) { streak++; d.setDate(d.getDate() - 1); } else break;
   }
   return streak;
 }
 
 function renderHabits() {
-  const el = document.getElementById('habitList');
+  var el = document.getElementById('habitList');
   if (!el) return;
-  if (state.habits.length === 0) {
-    el.innerHTML = '<div class="empty-state"><div class="icon">◎</div><p>暂无习惯，点击上方创建</p></div>';
-    return;
-  }
-  const today = new Date().toISOString().slice(0, 10);
-  const dayLabels = ['日','一','二','三','四','五','六'];
-  el.innerHTML = state.habits.map(h => {
-    const streak = getHabitStreak(h);
-    const done = !!h.checkins[today];
-    const weatherInfo = h.checkins[today]?.weather;
-    // Last 7 days
-    const weekDays = [];
-    for (let i = 6; i >= 0; i--) {
-      const d = new Date(); d.setDate(d.getDate() - i);
-      const key = d.toISOString().slice(0, 10);
-      const isToday = key === today;
-      weekDays.push(`<div class="habit-day ${h.checkins[key] ? 'done' : ''} ${isToday ? 'today' : ''}">${dayLabels[d.getDay()]}</div>`);
+  if (state.habits.length === 0) { el.innerHTML = '<div class="empty-state"><div class="icon">◎</div><p>暂无习惯，点击上方创建</p></div>'; return; }
+  var today = new Date().toISOString().slice(0, 10);
+  var dayLabels = ['日','一','二','三','四','五','六'];
+  el.innerHTML = state.habits.map(function(h) {
+    var streak = getHabitStreak(h);
+    var done = !!h.checkins[today];
+    var weatherInfo = h.checkins[today] ? h.checkins[today].weather : null;
+    var weekDays = [];
+    for (var i = 6; i >= 0; i--) {
+      var d = new Date(); d.setDate(d.getDate() - i);
+      var key = d.toISOString().slice(0, 10);
+      var isToday = key === today;
+      weekDays.push('<div class="habit-day ' + (h.checkins[key] ? 'done' : '') + ' ' + (isToday ? 'today' : '') + '">' + dayLabels[d.getDay()] + '</div>');
     }
-    return `<div class="habit-card">
-      <div class="habit-header">
-        <span style="font-size:1.3rem">${h.icon}</span>
-        <span class="habit-name">${escHtml(h.name)}</span>
-        <span class="habit-streak">🔥 ${streak}天</span>
-        <button class="habit-checkin-btn ${done ? 'done' : ''}" onclick="${done ? '' : `checkinHabit('${h.id}')`}">${done ? '✓ 已打卡' : '打卡'}</button>
-        <button class="btn btn-sm btn-danger" onclick="deleteHabit('${h.id}')" style="margin-left:4px">✕</button>
-      </div>
-      ${weatherInfo ? `<div class="habit-weather">🌡 打卡时天气: ${weatherInfo}</div>` : ''}
-      <div class="habit-week">${weekDays.join('')}</div>
-    </div>`;
+    return '<div class="habit-card"><div class="habit-header"><span style="font-size:1.3rem">' + h.icon + '</span><span class="habit-name">' + escHtml(h.name) + '</span><span class="habit-streak">🔥 ' + streak + '天</span><button class="habit-checkin-btn ' + (done ? 'done' : '') + '" onclick="' + (done ? '' : "checkinHabit('" + h.id + "')") + '">' + (done ? '✓ 已打卡' : '打卡') + '</button><button class="btn btn-sm btn-danger" onclick="deleteHabit(\'' + h.id + '\')" style="margin-left:4px">✕</button></div>' + (weatherInfo ? '<div class="habit-weather">🌡 打卡时天气: ' + weatherInfo + '</div>' : '') + '<div class="habit-week">' + weekDays.join('') + '</div></div>';
   }).join('');
   renderHabitHeatmap();
   renderHabitStatChart();
 }
 
 function renderHabitHeatmap() {
-  const container = document.getElementById('habitHeatmap');
-  const lineBarContainer = document.getElementById('habitLineBarChartContainer');
+  var container = document.getElementById('habitHeatmap');
+  var lineBarContainer = document.getElementById('habitLineBarChartContainer');
   if (!container) return;
-  
-  // Check if heatmap chart type is active
-  const activeBtn = document.querySelector('#habitChartGroup .btn-chart.active');
+  var activeBtn = document.querySelector('#habitChartGroup .btn-chart.active');
   if (activeBtn && activeBtn.textContent !== '热力图') {
     container.style.display = 'none';
     if (lineBarContainer) lineBarContainer.style.display = 'block';
@@ -1739,24 +1625,22 @@ function renderHabitHeatmap() {
   }
   if (lineBarContainer) lineBarContainer.style.display = 'none';
   container.style.display = 'block';
-
-  // Calculate last 90 days
-  const days = 90;
-  const counts = {};
-  for (let i = days - 1; i >= 0; i--) {
-    const d = new Date(); d.setDate(d.getDate() - i);
-    const key = d.toISOString().slice(0, 10);
-    let c = 0;
-    state.habits.forEach(h => { if (h.checkins[key]) c++; });
+  var days = 90;
+  var counts = {};
+  for (var i = days - 1; i >= 0; i--) {
+    var d = new Date(); d.setDate(d.getDate() - i);
+    var key = d.toISOString().slice(0, 10);
+    var c = 0;
+    state.habits.forEach(function(h) { if (h.checkins[key]) c++; });
     counts[key] = c;
   }
-  let html = '<div class="heatmap-grid">';
-  Object.values(counts).forEach(c => {
-    const lvl = c === 0 ? '' : c === 1 ? 'l1' : c === 2 ? 'l2' : c === 3 ? 'l3' : 'l4';
-    html += `<div class="heatmap-cell ${lvl}"></div>`;
+  var html = '<div class="heatmap-grid">';
+  Object.values(counts).forEach(function(c) {
+    var lvl = c === 0 ? '' : c === 1 ? 'l1' : c === 2 ? 'l2' : c === 3 ? 'l3' : 'l4';
+    html += '<div class="heatmap-cell ' + lvl + '"></div>';
   });
   html += '</div><div class="heatmap-legend">少';
-  ['','l1','l2','l3','l4'].forEach(l => { html += `<div class="heatmap-cell ${l}"></div>`; });
+  ['','l1','l2','l3','l4'].forEach(function(l) { html += '<div class="heatmap-cell ' + l + '"></div>'; });
   html += '多</div>';
   container.innerHTML = html;
 }
@@ -1769,7 +1653,7 @@ function refreshHabitsPage() {
 /* ============ NEWS ============ */
 function setNewsCat(cat, el) {
   state.newsCat = cat;
-  document.querySelectorAll('#newsCatPills .filter-pill').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('#newsCatPills .filter-pill').forEach(function(p) { p.classList.remove('active'); });
   el.classList.add('active');
   renderNews();
 }
@@ -1787,104 +1671,81 @@ function toggleNewsUnreadFilter() {
 }
 
 function toggleNewsRead(id) {
-  const n = state.news.find(n => n.id === id);
+  var n = state.news.find(function(n) { return n.id === id; });
   if (n) { n.read = !n.read; saveState(); renderNews(); }
 }
 
 function toggleNewsBookmark(id) {
-  const n = state.news.find(n => n.id === id);
+  var n = state.news.find(function(n) { return n.id === id; });
   if (n) { n.bookmarked = !n.bookmarked; saveState(); renderNews(); }
 }
 
 function renderNews() {
-  const search = (document.getElementById('newsSearch')?.value || '').toLowerCase();
-  let items = state.news.filter(n => {
+  var search = (document.getElementById('newsSearch') ? document.getElementById('newsSearch').value : '').toLowerCase();
+  var items = state.news.filter(function(n) {
     if (state.newsCat !== 'all' && n.category !== state.newsCat) return false;
     if (state.newsBookmarkOnly && !n.bookmarked) return false;
     if (state.newsUnreadOnly && n.read) return false;
     if (search && !n.title.toLowerCase().includes(search) && !n.summary.toLowerCase().includes(search)) return false;
     return true;
   });
-  const el = document.getElementById('newsList');
+  var el = document.getElementById('newsList');
   if (!el) return;
   if (items.length === 0) { el.innerHTML = '<div class="empty-state"><div class="icon">⬡</div><p>暂无匹配资讯</p></div>'; return; }
-  const catColors = {'大模型':'tag-cyan','AI应用':'tag-purple','行业动态':'tag-green','政策法规':'tag-orange'};
-  el.innerHTML = items.map(n => `<div class="news-card ${n.read ? 'read' : ''}" onclick="toggleNewsRead('${n.id}')">
-    <div class="news-card-header">
-      <div class="news-card-title"><a href="${n.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${escHtml(n.title)}</a></div>
-    </div>
-    <div class="news-card-summary">${escHtml(n.summary)}</div>
-    <div class="news-card-footer">
-      <span class="tag ${catColors[n.category] || 'tag-cyan'}">${n.category}</span>
-      <span class="news-card-source">${n.source} · ${n.date}</span>
-      <div class="news-actions">
-        <button class="news-action-btn ${n.bookmarked ? 'bookmarked' : ''}" onclick="event.stopPropagation();toggleNewsBookmark('${n.id}')" title="收藏">${n.bookmarked ? '🔖' : '🏷'}</button>
-        <a href="${n.url}" target="_blank" rel="noopener" class="news-action-btn" onclick="event.stopPropagation()" title="原文链接">🔗</a>
-      </div>
-    </div>
-  </div>`).join('');
+  var catColors = {'大模型':'tag-orange','AI应用':'tag-purple','行业动态':'tag-green','政策法规':'tag-gold'};
+  el.innerHTML = items.map(function(n) { return '<div class="news-card ' + (n.read ? 'read' : '') + '" onclick="toggleNewsRead(\'' + n.id + '\')"><div class="news-card-header"><div class="news-card-title"><a href="' + n.url + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">' + escHtml(n.title) + '</a></div></div><div class="news-card-summary">' + escHtml(n.summary) + '</div><div class="news-card-footer"><span class="tag ' + (catColors[n.category] || 'tag-orange') + '">' + n.category + '</span><span class="news-card-source">' + n.source + ' · ' + n.date + '</span><div class="news-actions"><button class="news-action-btn ' + (n.bookmarked ? 'bookmarked' : '') + '" onclick="event.stopPropagation();toggleNewsBookmark(\'' + n.id + '\')" title="收藏">' + (n.bookmarked ? '🔖' : '🏷') + '</button><a href="' + n.url + '" target="_blank" rel="noopener" class="news-action-btn" onclick="event.stopPropagation()" title="原文链接">🔗</a></div></div></div>'; }).join('');
 }
 
 /* ============ ACADEMIC ============ */
 function setAcademicTag(tag, el) {
   state.academicTag = tag;
-  document.querySelectorAll('#academicTagPills .filter-pill').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('#academicTagPills .filter-pill').forEach(function(p) { p.classList.remove('active'); });
   el.classList.add('active');
   renderAcademic();
 }
 
 function renderAcademic() {
-  const search = (document.getElementById('academicSearch')?.value || '').toLowerCase();
-  let items = state.academic.filter(a => {
+  var search = (document.getElementById('academicSearch') ? document.getElementById('academicSearch').value : '').toLowerCase();
+  var items = state.academic.filter(function(a) {
     if (state.academicTag !== 'all' && !a.tags.includes(state.academicTag)) return false;
     if (search && !a.title.toLowerCase().includes(search) && !a.summary.toLowerCase().includes(search) && !a.authors.toLowerCase().includes(search)) return false;
     return true;
   });
-  const el = document.getElementById('academicList');
+  var el = document.getElementById('academicList');
   if (!el) return;
   if (items.length === 0) { el.innerHTML = '<div class="empty-state"><div class="icon">◇</div><p>暂无匹配论文</p></div>'; return; }
-  el.innerHTML = items.map(a => `<div class="academic-card">
-    <div class="academic-title"><a href="${a.url}" target="_blank" rel="noopener">${escHtml(a.title)}</a></div>
-    <div class="academic-authors">${escHtml(a.authors)}</div>
-    <div class="academic-meta">
-      <span class="tag tag-purple">${a.venue}</span>
-      <span style="font-size:.75rem;color:var(--text-dim)">${a.date}</span>
-    </div>
-    <div class="academic-summary">${escHtml(a.summary)}</div>
-    <div class="academic-tags">${a.tags.map(t => `<span class="tag tag-cyan">${t}</span>`).join('')}</div>
-  </div>`).join('');
+  el.innerHTML = items.map(function(a) { return '<div class="academic-card"><div class="academic-title"><a href="' + a.url + '" target="_blank" rel="noopener">' + escHtml(a.title) + '</a></div><div class="academic-authors">' + escHtml(a.authors) + '</div><div class="academic-meta"><span class="tag tag-purple">' + a.venue + '</span><span style="font-size:.75rem;color:var(--text-dim)">' + a.date + '</span></div><div class="academic-summary">' + escHtml(a.summary) + '</div><div class="academic-tags">' + a.tags.map(function(t) { return '<span class="tag tag-orange">' + t + '</span>'; }).join('') + '</div></div>'; }).join('');
 }
 
 /* ============ CHARTS ============ */
-const chartInstances = {};
-const chartColors = {
-  cyan: '#00d4ff', purple: '#7c3aed', green: '#10b981',
-  pink: '#f472b6', orange: '#fb923c', red: '#ef4444'
+var chartInstances = {};
+var chartColors = {
+  orange: '#FF6B35', purple: '#9B6BFF', green: '#2ECC71',
+  coral: '#E85D75', gold: '#FFB347', red: '#E74C3C'
 };
 
 function getWeekLabels() {
-  const labels = [];
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date(); d.setDate(d.getDate() - i);
-    labels.push(`${d.getMonth()+1}/${d.getDate()}`);
+  var labels = [];
+  for (var i = 6; i >= 0; i--) {
+    var d = new Date(); d.setDate(d.getDate() - i);
+    labels.push((d.getMonth()+1) + '/' + d.getDate());
   }
   return labels;
 }
 
 function getWeekDates() {
-  const dates = [];
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date(); d.setDate(d.getDate() - i);
+  var dates = [];
+  for (var i = 6; i >= 0; i--) {
+    var d = new Date(); d.setDate(d.getDate() - i);
     dates.push(d.toISOString().slice(0, 10));
   }
   return dates;
 }
 
 function getWeeklyTimeData() {
-  const dates = getWeekDates();
-  return dates.map(d => {
-    const total = state.timeLogs.filter(l => l.day === new Date(d).toLocaleDateString('zh-CN'))
-      .reduce((s, l) => s + l.seconds, 0);
+  var dates = getWeekDates();
+  return dates.map(function(d) {
+    var total = state.timeLogs.filter(function(l) { return l.day === new Date(d).toLocaleDateString('zh-CN'); }).reduce(function(s, l) { return s + l.seconds; }, 0);
     return +(total / 3600).toFixed(1);
   });
 }
@@ -1893,151 +1754,127 @@ function destroyChart(key) {
   if (chartInstances[key]) { chartInstances[key].destroy(); chartInstances[key] = null; }
 }
 
-const defaultChartOpts = {
+var defaultChartOpts = {
   responsive: true,
   maintainAspectRatio: false,
-  plugins: {
-    legend: { labels: { color: '#94a3b8', font: { family: 'Inter', size: 11 } } }
-  },
+  plugins: { legend: { labels: { color: '#636E72', font: { family: 'Inter', size: 11 } } } },
   scales: {
-    x: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { color: 'rgba(0,212,255,0.06)' } },
-    y: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { color: 'rgba(0,212,255,0.06)' } }
+    x: { ticks: { color: '#95A5A6', font: { size: 10 } }, grid: { color: 'rgba(255,107,53,0.06)' } },
+    y: { ticks: { color: '#95A5A6', font: { size: 10 } }, grid: { color: 'rgba(255,107,53,0.06)' } }
   }
 };
 
-/* Dashboard chart */
 function renderDashChart(type) {
   destroyChart('dashChart');
-  const ctx = document.getElementById('dashChart').getContext('2d');
-  const labels = getWeekLabels();
-  const data = getWeeklyTimeData();
+  var ctx = document.getElementById('dashChart').getContext('2d');
+  var labels = getWeekLabels();
+  var data = getWeeklyTimeData();
   if (type === 'pie') {
     chartInstances.dashChart = new Chart(ctx, {
       type: 'pie',
-      data: { labels, datasets: [{ data, backgroundColor: [chartColors.cyan, chartColors.purple, chartColors.green, chartColors.pink, chartColors.orange, chartColors.red, '#6366f1'], borderColor: 'rgba(6,10,26,0.8)', borderWidth: 2 }] },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#94a3b8', font: { family: 'Inter', size: 11 } } } } }
+      data: { labels: labels, datasets: [{ data: data, backgroundColor: [chartColors.orange, chartColors.purple, chartColors.green, chartColors.coral, chartColors.gold, chartColors.red, '#6366f1'], borderColor: 'rgba(255,248,240,0.8)', borderWidth: 2 }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#636E72', font: { family: 'Inter', size: 11 } } } } }
     });
   } else {
     chartInstances.dashChart = new Chart(ctx, {
-      type,
-      data: { labels, datasets: [{ label: '专注时长(h)', data, backgroundColor: type === 'bar' ? 'rgba(0,212,255,0.25)' : 'rgba(0,212,255,0.1)', borderColor: chartColors.cyan, borderWidth: 2, fill: type === 'line', tension: 0.4, pointBackgroundColor: chartColors.cyan, pointRadius: 4 }] },
+      type: type,
+      data: { labels: labels, datasets: [{ label: '专注时长(h)', data: data, backgroundColor: type === 'bar' ? 'rgba(255,107,53,0.25)' : 'rgba(255,107,53,0.1)', borderColor: chartColors.orange, borderWidth: 2, fill: type === 'line', tension: 0.4, pointBackgroundColor: chartColors.orange, pointRadius: 4 }] },
       options: JSON.parse(JSON.stringify(defaultChartOpts))
     });
   }
 }
 
 function switchDashChart(type, el) {
-  el.parentElement.querySelectorAll('.btn-chart').forEach(b => b.classList.remove('active'));
+  el.parentElement.querySelectorAll('.btn-chart').forEach(function(b) { b.classList.remove('active'); });
   el.classList.add('active');
   renderDashChart(type);
 }
 
-/* Dashboard habit chart */
 function renderDashHabitChart(type) {
   destroyChart('dashHabitChart');
-  const ctx = document.getElementById('dashHabitChart').getContext('2d');
-  const dates = getWeekDates();
-  const labels = getWeekLabels();
-  const habData = state.habits.slice(0, 5);
-  const colors = [chartColors.cyan, chartColors.purple, chartColors.green, chartColors.pink, chartColors.orange];
-  
+  var ctx = document.getElementById('dashHabitChart').getContext('2d');
+  var dates = getWeekDates();
+  var labels = getWeekLabels();
+  var habData = state.habits.slice(0, 5);
+  var colors = [chartColors.orange, chartColors.purple, chartColors.green, chartColors.coral, chartColors.gold];
   if (type === 'radar') {
-    const datasets = habData.map((h, i) => ({
-      label: h.name,
-      data: dates.map(d => h.checkins[d] ? 1 : 0),
-      backgroundColor: colors[i] + '33',
-      borderColor: colors[i],
-      borderWidth: 2,
-      pointBackgroundColor: colors[i]
-    }));
+    var datasets = habData.map(function(h, i) { return {
+      label: h.name, data: dates.map(function(d) { return h.checkins[d] ? 1 : 0; }),
+      backgroundColor: colors[i] + '33', borderColor: colors[i], borderWidth: 2, pointBackgroundColor: colors[i]
+    }; });
     chartInstances.dashHabitChart = new Chart(ctx, {
       type: 'radar',
-      data: { labels, datasets },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        scales: { r: { ticks: { color: '#64748b', backdropColor: 'transparent' }, grid: { color: 'rgba(0,212,255,0.1)' }, pointLabels: { color: '#94a3b8' } } },
-        plugins: { legend: { labels: { color: '#94a3b8', font: { family: 'Inter', size: 10 } } } }
-      }
+      data: { labels: labels, datasets: datasets },
+      options: { responsive: true, maintainAspectRatio: false, scales: { r: { ticks: { color: '#95A5A6', backdropColor: 'transparent' }, grid: { color: 'rgba(255,107,53,0.1)' }, pointLabels: { color: '#636E72' } } }, plugins: { legend: { labels: { color: '#636E72', font: { family: 'Inter', size: 10 } } } } }
     });
   } else {
-    const datasets = habData.map((h, i) => ({
-      label: h.name,
-      data: dates.map(d => h.checkins[d] ? 1 : 0),
+    var datasets2 = habData.map(function(h, i) { return {
+      label: h.name, data: dates.map(function(d) { return h.checkins[d] ? 1 : 0; }),
       backgroundColor: type === 'bar' ? colors[i] + '55' : 'transparent',
-      borderColor: colors[i],
-      borderWidth: 2,
-      fill: type === 'line',
-      tension: 0.4
-    }));
+      borderColor: colors[i], borderWidth: 2, fill: type === 'line', tension: 0.4
+    }; });
     chartInstances.dashHabitChart = new Chart(ctx, {
-      type,
-      data: { labels, datasets },
+      type: type, data: { labels: labels, datasets: datasets2 },
       options: JSON.parse(JSON.stringify(defaultChartOpts))
     });
   }
 }
 
 function switchDashHabitChart(type, el) {
-  el.parentElement.querySelectorAll('.btn-chart').forEach(b => b.classList.remove('active'));
+  el.parentElement.querySelectorAll('.btn-chart').forEach(function(b) { b.classList.remove('active'); });
   el.classList.add('active');
   renderDashHabitChart(type);
 }
 
-/* Timer chart */
 function renderTimerChart(type) {
   destroyChart('timerChart');
-  const ctx = document.getElementById('timerChart');
+  var ctx = document.getElementById('timerChart');
   if (!ctx) return;
-  const labels = getWeekLabels();
-  const data = getWeeklyTimeData();
-  
+  var labels = getWeekLabels();
+  var data = getWeeklyTimeData();
   if (type === 'radar') {
     chartInstances.timerChart = new Chart(ctx.getContext('2d'), {
       type: 'radar',
-      data: { labels, datasets: [{ label: '专注(h)', data, backgroundColor: 'rgba(0,212,255,0.2)', borderColor: chartColors.cyan, borderWidth: 2, pointBackgroundColor: chartColors.cyan }] },
-      options: { responsive: true, maintainAspectRatio: false, scales: { r: { ticks: { color: '#64748b', backdropColor: 'transparent' }, grid: { color: 'rgba(0,212,255,0.1)' }, pointLabels: { color: '#94a3b8' } } }, plugins: { legend: { labels: { color: '#94a3b8' } } } }
+      data: { labels: labels, datasets: [{ label: '专注(h)', data: data, backgroundColor: 'rgba(255,107,53,0.2)', borderColor: chartColors.orange, borderWidth: 2, pointBackgroundColor: chartColors.orange }] },
+      options: { responsive: true, maintainAspectRatio: false, scales: { r: { ticks: { color: '#95A5A6', backdropColor: 'transparent' }, grid: { color: 'rgba(255,107,53,0.1)' }, pointLabels: { color: '#636E72' } } }, plugins: { legend: { labels: { color: '#636E72' } } } }
     });
   } else {
     chartInstances.timerChart = new Chart(ctx.getContext('2d'), {
-      type,
-      data: { labels, datasets: [{ label: '专注时长(h)', data, backgroundColor: type === 'bar' ? 'rgba(124,58,237,0.3)' : 'rgba(124,58,237,0.1)', borderColor: chartColors.purple, borderWidth: 2, fill: type === 'line', tension: 0.4, pointBackgroundColor: chartColors.purple, pointRadius: 4 }] },
+      type: type,
+      data: { labels: labels, datasets: [{ label: '专注时长(h)', data: data, backgroundColor: type === 'bar' ? 'rgba(155,107,255,0.3)' : 'rgba(155,107,255,0.1)', borderColor: chartColors.purple, borderWidth: 2, fill: type === 'line', tension: 0.4, pointBackgroundColor: chartColors.purple, pointRadius: 4 }] },
       options: JSON.parse(JSON.stringify(defaultChartOpts))
     });
   }
 }
 
 function switchTimerChart(type, el) {
-  el.parentElement.querySelectorAll('.btn-chart').forEach(b => b.classList.remove('active'));
+  el.parentElement.querySelectorAll('.btn-chart').forEach(function(b) { b.classList.remove('active'); });
   el.classList.add('active');
   renderTimerChart(type);
 }
 
-/* Habit line/bar chart */
 function renderHabitLineBarChart() {
   destroyChart('habitLineBarChart');
-  const container = document.getElementById('habitLineBarChartContainer');
+  var container = document.getElementById('habitLineBarChartContainer');
   if (!container || container.style.display === 'none') return;
-  const ctx = document.getElementById('habitLineBarChart');
+  var ctx = document.getElementById('habitLineBarChart');
   if (!ctx) return;
-  const dates = getWeekDates();
-  const labels = getWeekLabels();
-  const totalPerDay = dates.map(d => {
-    let c = 0;
-    state.habits.forEach(h => { if (h.checkins[d]) c++; });
-    return c;
+  var dates = getWeekDates();
+  var labels = getWeekLabels();
+  var totalPerDay = dates.map(function(d) {
+    var c = 0; state.habits.forEach(function(h) { if (h.checkins[d]) c++; }); return c;
   });
-  const activeBtn = document.querySelector('#habitChartGroup .btn-chart.active');
-  const type = activeBtn ? (activeBtn.textContent === '折线' ? 'line' : 'bar') : 'bar';
-  
+  var activeBtn = document.querySelector('#habitChartGroup .btn-chart.active');
+  var type = activeBtn ? (activeBtn.textContent === '折线' ? 'line' : 'bar') : 'bar';
   chartInstances.habitLineBarChart = new Chart(ctx.getContext('2d'), {
-    type,
-    data: { labels, datasets: [{ label: '每日打卡数', data: totalPerDay, backgroundColor: type === 'bar' ? 'rgba(16,185,129,0.3)' : 'rgba(16,185,129,0.1)', borderColor: chartColors.green, borderWidth: 2, fill: type === 'line', tension: 0.4, pointBackgroundColor: chartColors.green, pointRadius: 4 }] },
+    type: type,
+    data: { labels: labels, datasets: [{ label: '每日打卡数', data: totalPerDay, backgroundColor: type === 'bar' ? 'rgba(46,204,113,0.3)' : 'rgba(46,204,113,0.1)', borderColor: chartColors.green, borderWidth: 2, fill: type === 'line', tension: 0.4, pointBackgroundColor: chartColors.green, pointRadius: 4 }] },
     options: JSON.parse(JSON.stringify(defaultChartOpts))
   });
 }
 
 function switchHabitChart(type, el) {
-  el.parentElement.querySelectorAll('.btn-chart').forEach(b => b.classList.remove('active'));
+  el.parentElement.querySelectorAll('.btn-chart').forEach(function(b) { b.classList.remove('active'); });
   el.classList.add('active');
   if (type === 'heatmap') {
     document.getElementById('habitHeatmap').style.display = 'block';
@@ -2050,33 +1887,30 @@ function switchHabitChart(type, el) {
   }
 }
 
-/* Habit stat chart */
 function renderHabitStatChart(type) {
   destroyChart('habitStatChart');
-  const ctx = document.getElementById('habitStatChart');
+  var ctx = document.getElementById('habitStatChart');
   if (!ctx) return;
-  const habData = state.habits.slice(0, 6);
+  var habData = state.habits.slice(0, 6);
   if (habData.length === 0) return;
-  const labels = habData.map(h => h.icon + ' ' + h.name);
-  const streaks = habData.map(h => getHabitStreak(h));
-  const totalCheckins = habData.map(h => Object.keys(h.checkins).length);
-  const colors = [chartColors.cyan, chartColors.purple, chartColors.green, chartColors.pink, chartColors.orange, chartColors.red];
-  
+  var labels = habData.map(function(h) { return h.icon + ' ' + h.name; });
+  var streaks = habData.map(function(h) { return getHabitStreak(h); });
+  var totalCheckins = habData.map(function(h) { return Object.keys(h.checkins).length; });
   if (type === 'radar') {
     chartInstances.habitStatChart = new Chart(ctx.getContext('2d'), {
       type: 'radar',
-      data: { labels, datasets: [
-        { label: '连续天数', data: streaks, backgroundColor: 'rgba(251,146,60,0.2)', borderColor: chartColors.orange, borderWidth: 2, pointBackgroundColor: chartColors.orange },
-        { label: '总打卡', data: totalCheckins, backgroundColor: 'rgba(0,212,255,0.2)', borderColor: chartColors.cyan, borderWidth: 2, pointBackgroundColor: chartColors.cyan }
+      data: { labels: labels, datasets: [
+        { label: '连续天数', data: streaks, backgroundColor: 'rgba(255,179,71,0.2)', borderColor: chartColors.gold, borderWidth: 2, pointBackgroundColor: chartColors.gold },
+        { label: '总打卡', data: totalCheckins, backgroundColor: 'rgba(255,107,53,0.2)', borderColor: chartColors.orange, borderWidth: 2, pointBackgroundColor: chartColors.orange }
       ] },
-      options: { responsive: true, maintainAspectRatio: false, scales: { r: { ticks: { color: '#64748b', backdropColor: 'transparent' }, grid: { color: 'rgba(0,212,255,0.1)' }, pointLabels: { color: '#94a3b8', font: { size: 10 } } } }, plugins: { legend: { labels: { color: '#94a3b8' } } } }
+      options: { responsive: true, maintainAspectRatio: false, scales: { r: { ticks: { color: '#95A5A6', backdropColor: 'transparent' }, grid: { color: 'rgba(255,107,53,0.1)' }, pointLabels: { color: '#636E72', font: { size: 10 } } } }, plugins: { legend: { labels: { color: '#636E72' } } } }
     });
   } else {
     chartInstances.habitStatChart = new Chart(ctx.getContext('2d'), {
-      type,
-      data: { labels, datasets: [
-        { label: '连续天数', data: streaks, backgroundColor: type === 'bar' ? 'rgba(251,146,60,0.3)' : 'transparent', borderColor: chartColors.orange, borderWidth: 2, fill: type === 'line', tension: 0.4 },
-        { label: '总打卡次数', data: totalCheckins, backgroundColor: type === 'bar' ? 'rgba(0,212,255,0.3)' : 'transparent', borderColor: chartColors.cyan, borderWidth: 2, fill: type === 'line', tension: 0.4 }
+      type: type,
+      data: { labels: labels, datasets: [
+        { label: '连续天数', data: streaks, backgroundColor: type === 'bar' ? 'rgba(255,179,71,0.3)' : 'transparent', borderColor: chartColors.gold, borderWidth: 2, fill: type === 'line', tension: 0.4 },
+        { label: '总打卡次数', data: totalCheckins, backgroundColor: type === 'bar' ? 'rgba(255,107,53,0.3)' : 'transparent', borderColor: chartColors.orange, borderWidth: 2, fill: type === 'line', tension: 0.4 }
       ] },
       options: JSON.parse(JSON.stringify(defaultChartOpts))
     });
@@ -2084,173 +1918,371 @@ function renderHabitStatChart(type) {
 }
 
 function switchHabitStatChart(type, el) {
-  el.parentElement.querySelectorAll('.btn-chart').forEach(b => b.classList.remove('active'));
+  el.parentElement.querySelectorAll('.btn-chart').forEach(function(b) { b.classList.remove('active'); });
   el.classList.add('active');
   renderHabitStatChart(type);
 }
 
 /* ============ DASHBOARD ============ */
 function refreshDashboard() {
-  // Stats
-  const activeTodos = state.todos.filter(t => !t.completed).length;
+  var activeTodos = state.todos.filter(function(t) { return !t.completed; }).length;
   document.getElementById('statTodos').textContent = activeTodos;
-  document.getElementById('statTodosSub').textContent = `共 ${state.todos.length} 项`;
-  
-  const todayLogs = state.timeLogs.filter(l => l.day === new Date().toLocaleDateString('zh-CN'));
-  const todayHours = todayLogs.reduce((s, l) => s + l.seconds, 0) / 3600;
+  document.getElementById('statTodosSub').textContent = '共 ' + state.todos.length + ' 项';
+  var todayLogs = state.timeLogs.filter(function(l) { return l.day === new Date().toLocaleDateString('zh-CN'); });
+  var todayHours = todayLogs.reduce(function(s, l) { return s + l.seconds; }, 0) / 3600;
   document.getElementById('statTime').textContent = todayHours.toFixed(1) + 'h';
-  document.getElementById('statTimeSub').textContent = `${todayLogs.length} 次记录`;
-  
-  const today = new Date().toISOString().slice(0, 10);
-  const todayCheckins = state.habits.reduce((c, h) => c + (h.checkins[today] ? 1 : 0), 0);
-  document.getElementById('statHabits').textContent = `${todayCheckins}/${state.habits.length}`;
+  document.getElementById('statTimeSub').textContent = todayLogs.length + ' 次记录';
+  var today = new Date().toISOString().slice(0, 10);
+  var todayCheckins = state.habits.reduce(function(c, h) { return c + (h.checkins[today] ? 1 : 0); }, 0);
+  document.getElementById('statHabits').textContent = todayCheckins + '/' + state.habits.length;
   document.getElementById('statHabitsSub').textContent = state.habits.length > 0 ? '今日打卡' : '暂无习惯';
-  
-  const unreadNews = state.news.filter(n => !n.read).length;
-  document.getElementById('statNewsSub').textContent = `${unreadNews} 条未读`;
-  
-  // Todo preview
-  const previewTodos = state.todos.filter(t => !t.completed).slice(0, 5);
-  const previewEl = document.getElementById('dashTodoPreview');
+  var unreadNews = state.news.filter(function(n) { return !n.read; }).length;
+  document.getElementById('statNewsSub').textContent = unreadNews + ' 条未读';
+  var previewTodos = state.todos.filter(function(t) { return !t.completed; }).slice(0, 5);
+  var previewEl = document.getElementById('dashTodoPreview');
   if (previewEl) {
-    if (previewTodos.length === 0) {
-      previewEl.innerHTML = '<div class="empty-state"><p>暂无待办</p></div>';
-    } else {
-      previewEl.innerHTML = previewTodos.map(t => {
-        const pIcon = t.priority === 'high' ? '🔴' : t.priority === 'medium' ? '🟡' : '🟢';
-        return `<div class="todo-item" style="margin-bottom:6px">
-          <div class="todo-check" onclick="toggleTodo('${t.id}')"></div>
-          <span class="todo-text" style="font-size:.82rem">${escHtml(t.text)}</span>
-          <span style="font-size:.7rem">${pIcon}</span>
-        </div>`;
-      }).join('');
-    }
+    if (previewTodos.length === 0) { previewEl.innerHTML = '<div class="empty-state"><p>暂无待办</p></div>'; }
+    else { previewEl.innerHTML = previewTodos.map(function(t) { var pIcon = t.priority === 'high' ? '🔴' : t.priority === 'medium' ? '🟡' : '🟢'; return '<div class="todo-item" style="margin-bottom:6px"><div class="todo-check" onclick="toggleTodo(\'' + t.id + '\')"></div><span class="todo-text" style="font-size:.82rem">' + escHtml(t.text) + '</span><span style="font-size:.7rem">' + pIcon + '</span></div>'; }).join(''); }
   }
-  
-  // News preview
-  const previewNews = state.news.slice(0, 4);
-  const newsPreviewEl = document.getElementById('dashNewsPreview');
+  var previewNews = state.news.slice(0, 4);
+  var newsPreviewEl = document.getElementById('dashNewsPreview');
   if (newsPreviewEl) {
-    newsPreviewEl.innerHTML = previewNews.map(n => `<div style="padding:8px 0;border-bottom:1px solid var(--border)">
-      <a href="${n.url}" target="_blank" style="color:var(--text-primary);text-decoration:none;font-size:.82rem;font-weight:500;display:block;line-height:1.4;transition:var(--transition)" onmouseover="this.style.color='var(--accent-cyan)'" onmouseout="this.style.color='var(--text-primary)'">${escHtml(n.title)}</a>
-      <span style="font-size:.7rem;color:var(--text-dim)">${n.source}</span>
-    </div>`).join('');
+    newsPreviewEl.innerHTML = previewNews.map(function(n) { return '<div style="padding:8px 0;border-bottom:1px solid var(--border)"><a href="' + n.url + '" target="_blank" style="color:var(--text-primary);text-decoration:none;font-size:.82rem;font-weight:500;display:block;line-height:1.4;transition:var(--transition)" onmouseover="this.style.color=\'var(--accent-orange)\'" onmouseout="this.style.color=\'var(--text-primary)\'">' + escHtml(n.title) + '</a><span style="font-size:.7rem;color:var(--text-dim)">' + n.source + '</span></div>'; }).join('');
   }
-  
-  // Charts
   renderDashChart('bar');
   renderDashHabitChart('bar');
 }
 
+/* ============ MINI GAME SYSTEM ============ */
+var gameInterval = null;
+
+function triggerRandomGame() {
+  var games = [gameSpeedClick, gameMemory, gameReaction, gameMathStorm, gameColorTest, gameWhackMole];
+  var pick = games[Math.floor(Math.random() * games.length)];
+  pick();
+}
+
+function openGameModal(title, desc) {
+  document.getElementById('gameTitle').textContent = title;
+  document.getElementById('gameDesc').textContent = desc;
+  document.getElementById('gameTimerBar').style.display = 'none';
+  document.getElementById('gameModal').classList.add('show');
+}
+
+function closeGame() {
+  if (gameInterval) { clearInterval(gameInterval); gameInterval = null; }
+  document.getElementById('gameModal').classList.remove('show');
+}
+
+function showGameResult(title, message) {
+  if (gameInterval) { clearInterval(gameInterval); gameInterval = null; }
+  document.getElementById('gameArea').innerHTML = '<div class="game-result"><h3>' + title + '</h3><p>' + message + '</p><button class="btn btn-primary" onclick="closeGame()">太棒了！</button></div>';
+}
+
+/* Game 1: Speed Click */
+function gameSpeedClick() {
+  openGameModal('⚡ 极速点击', '10秒内尽可能多地点击按钮！');
+  var clicks = 0;
+  var timeLeft = 10;
+  var best = parseInt(localStorage.getItem('nexus_game_click_best') || '0');
+  document.getElementById('gameTimerBar').style.display = 'block';
+  document.getElementById('gameArea').innerHTML = '<div class="game-score" id="clickCount">0</div><button class="click-btn" id="clickBtn">0</button><div style="margin-top:12px;color:var(--text-dim);font-size:.8rem">最高纪录: ' + best + ' 次</div>';
+  var btn = document.getElementById('clickBtn');
+  btn.addEventListener('click', function() {
+    clicks++;
+    document.getElementById('clickCount').textContent = clicks;
+    btn.textContent = clicks;
+  });
+  var startTime = Date.now();
+  gameInterval = setInterval(function() {
+    var elapsed = (Date.now() - startTime) / 1000;
+    var pct = Math.max(0, (1 - elapsed / timeLeft) * 100);
+    document.getElementById('gameTimerFill').style.width = pct + '%';
+    if (elapsed >= timeLeft) {
+      clearInterval(gameInterval); gameInterval = null;
+      if (clicks > best) { localStorage.setItem('nexus_game_click_best', clicks.toString()); }
+      var newBest = parseInt(localStorage.getItem('nexus_game_click_best') || '0');
+      var msg = clicks >= 80 ? '🏆 超级手速！' : clicks >= 60 ? '🔥 非常快！' : clicks >= 40 ? '😊 不错哦！' : '💪 继续加油！';
+      showGameResult(clicks + ' 次点击！', msg + '<br>最高纪录: ' + newBest + ' 次');
+    }
+  }, 50);
+}
+
+/* Game 2: Memory Cards */
+function gameMemory() {
+  openGameModal('🃏 记忆翻牌', '翻开两张相同的卡片消除，越快越好！');
+  var emojis = ['🍊','🌸','⭐','🎵','💎','🦋'];
+  var cards = emojis.concat(emojis);
+  for (var i = cards.length - 1; i > 0; i--) { var j = Math.floor(Math.random()*(i+1)); var t=cards[i];cards[i]=cards[j];cards[j]=t; }
+  var flipped = []; var matched = 0; var moves = 0;
+  document.getElementById('gameArea').innerHTML = '<div class="memory-grid" id="memGrid"></div><div style="margin-top:8px;color:var(--text-dim);font-size:.8rem" id="memMoves">翻开: 0</div>';
+  var grid = document.getElementById('memGrid');
+  cards.forEach(function(emoji, idx) {
+    var card = document.createElement('div');
+    card.className = 'memory-card';
+    card.dataset.emoji = emoji;
+    card.dataset.idx = idx;
+    card.textContent = '?';
+    card.addEventListener('click', function() {
+      if (card.classList.contains('flipped') || card.classList.contains('matched') || flipped.length >= 2) return;
+      card.classList.add('flipped');
+      card.textContent = emoji;
+      flipped.push(card);
+      if (flipped.length === 2) {
+        moves++;
+        document.getElementById('memMoves').textContent = '翻开: ' + moves;
+        if (flipped[0].dataset.emoji === flipped[1].dataset.emoji) {
+          flipped[0].classList.add('matched'); flipped[1].classList.add('matched');
+          flipped = []; matched++;
+          if (matched === emojis.length) {
+            var msg = moves <= 8 ? '🏆 记忆力超群！' : moves <= 12 ? '🔥 很不错！' : '😊 完成了！';
+            setTimeout(function() { showGameResult('用了 ' + moves + ' 步完成！', msg); }, 300);
+          }
+        } else {
+          var f = flipped.slice();
+          setTimeout(function() { f[0].classList.remove('flipped'); f[0].textContent = '?'; f[1].classList.remove('flipped'); f[1].textContent = '?'; flipped = []; }, 600);
+        }
+      }
+    });
+    grid.appendChild(card);
+  });
+}
+
+/* Game 3: Reaction Test */
+function gameReaction() {
+  openGameModal('🎯 反应力测试', '等屏幕变绿后尽快点击！');
+  var startTime = 0;
+  var phase = 'waiting'; // waiting, ready, go, done
+  document.getElementById('gameArea').innerHTML = '<div class="reaction-box" id="rxBox" style="background:var(--accent-coral)">等待...<br><span style="font-size:.8rem">屏幕变绿时点击</span></div>';
+  var box = document.getElementById('rxBox');
+  var delay = 1500 + Math.random() * 3000;
+  setTimeout(function() {
+    box.style.background = 'var(--accent-green)';
+    box.innerHTML = '点击！';
+    startTime = Date.now();
+    phase = 'go';
+  }, delay);
+  box.addEventListener('click', function() {
+    if (phase === 'waiting' || phase === 'ready') {
+      showGameResult('太早了！', '请等屏幕变绿再点击哦。<br><button class="btn btn-sm" onclick="gameReaction()" style="margin-top:8px">再来一次</button>');
+      return;
+    }
+    if (phase === 'go') {
+      var rt = Date.now() - startTime;
+      phase = 'done';
+      var rating = rt < 200 ? '⚡ 超快！' : rt < 300 ? '🔥 不错！' : rt < 500 ? '😊 一般' : '🐢 有点慢';
+      showGameResult(rt + ' ms', rating);
+    }
+  });
+}
+
+/* Game 4: Math Storm */
+function gameMathStorm() {
+  openGameModal('🧮 数字风暴', '30秒内答对尽可能多的数学题！');
+  var score = 0; var timeLeft = 30; var startTime = Date.now();
+  var currentAnswer = 0;
+  function newProblem() {
+    var ops = ['+','-','×'];
+    var op = ops[Math.floor(Math.random()*3)];
+    var a, b;
+    if (op === '+') { a = Math.floor(Math.random()*50)+1; b = Math.floor(Math.random()*50)+1; currentAnswer = a+b; }
+    else if (op === '-') { a = Math.floor(Math.random()*50)+10; b = Math.floor(Math.random()*a); currentAnswer = a-b; }
+    else { a = Math.floor(Math.random()*12)+1; b = Math.floor(Math.random()*12)+1; currentAnswer = a*b; }
+    return a + ' ' + op + ' ' + b + ' = ?';
+  }
+  document.getElementById('gameTimerBar').style.display = 'block';
+  document.getElementById('gameArea').innerHTML = '<div class="game-score" id="mathScore">0</div><div class="math-problem" id="mathProblem"></div><input class="input math-input" id="mathAnswer" type="number" placeholder="?"><button class="btn btn-primary" id="mathSubmit" style="margin-top:12px">确定</button>';
+  document.getElementById('mathProblem').textContent = newProblem();
+  var input = document.getElementById('mathAnswer');
+  input.focus();
+  function submit() {
+    var val = parseInt(input.value);
+    if (val === currentAnswer) { score++; document.getElementById('mathScore').textContent = score; }
+    input.value = '';
+    document.getElementById('mathProblem').textContent = newProblem();
+    input.focus();
+  }
+  document.getElementById('mathSubmit').addEventListener('click', submit);
+  input.addEventListener('keydown', function(e) { if (e.key === 'Enter') submit(); });
+  gameInterval = setInterval(function() {
+    var elapsed = (Date.now() - startTime) / 1000;
+    var pct = Math.max(0, (1 - elapsed / timeLeft) * 100);
+    document.getElementById('gameTimerFill').style.width = pct + '%';
+    if (elapsed >= timeLeft) {
+      clearInterval(gameInterval); gameInterval = null;
+      var msg = score >= 15 ? '🏆 数学天才！' : score >= 10 ? '🔥 很厉害！' : score >= 5 ? '😊 不错哦！' : '💪 继续练习！';
+      showGameResult('答对 ' + score + ' 题！', msg);
+    }
+  }, 50);
+}
+
+/* Game 5: Color Test (Stroop) */
+function gameColorTest() {
+  openGameModal('🎨 颜色辨别', '选择文字的显示颜色（不是文字内容）！');
+  var colorMap = { '红':'#E74C3C','蓝':'#3498DB','绿':'#2ECC71','橙':'#FF6B35','紫':'#9B6BFF' };
+  var colorNames = Object.keys(colorMap);
+  var round = 0; var correct = 0; var total = 10; var startTime = Date.now();
+  function showRound() {
+    if (round >= total) {
+      var elapsed = ((Date.now() - startTime)/1000).toFixed(1);
+      var msg = correct >= 9 ? '🏆 超强抗干扰！' : correct >= 7 ? '🔥 很棒！' : correct >= 5 ? '😊 还可以' : '💪 Stroop效应很难的！';
+      showGameResult(correct + '/' + total + ' 正确 (' + elapsed + '秒)', msg);
+      return;
+    }
+    var word = colorNames[Math.floor(Math.random()*colorNames.length)];
+    var displayColor = colorNames[Math.floor(Math.random()*colorNames.length)];
+    document.getElementById('gameArea').innerHTML = '<div style="font-size:.85rem;color:var(--text-dim);margin-bottom:8px">第 ' + (round+1) + '/' + total + ' 题</div><div class="color-word" style="color:' + colorMap[displayColor] + '">' + word + '</div><div style="font-size:.8rem;color:var(--text-dim);margin-bottom:12px">↑ 选择文字的 <b>显示颜色</b></div><div class="color-options" id="colorOpts"></div>';
+    var opts = document.getElementById('colorOpts');
+    colorNames.forEach(function(cn) {
+      var btn = document.createElement('div');
+      btn.className = 'color-opt';
+      btn.textContent = cn;
+      btn.style.color = colorMap[cn];
+      btn.style.borderColor = colorMap[cn];
+      btn.addEventListener('click', function() {
+        if (cn === displayColor) correct++;
+        round++;
+        setTimeout(showRound, 200);
+      });
+      opts.appendChild(btn);
+    });
+  }
+  showRound();
+}
+
+/* Game 6: Whack-a-Mole */
+function gameWhackMole() {
+  openGameModal('🔨 打地鼠', '15秒内尽可能多地点击出现的地鼠！');
+  var score = 0; var timeLeft = 15; var startTime = Date.now();
+  var best = parseInt(localStorage.getItem('nexus_game_mole_best') || '0');
+  document.getElementById('gameTimerBar').style.display = 'block';
+  document.getElementById('gameArea').innerHTML = '<div class="game-score" id="moleScore">0</div><div class="mole-grid" id="moleGrid"></div><div style="margin-top:8px;color:var(--text-dim);font-size:.8rem">最高纪录: ' + best + '</div>';
+  var grid = document.getElementById('moleGrid');
+  var holes = [];
+  for (var i = 0; i < 9; i++) {
+    var hole = document.createElement('div');
+    hole.className = 'mole-hole';
+    hole.dataset.idx = i;
+    hole.addEventListener('click', function() {
+      if (this.classList.contains('active')) {
+        score++;
+        document.getElementById('moleScore').textContent = score;
+        this.classList.remove('active');
+        this.textContent = '';
+      }
+    });
+    grid.appendChild(hole);
+    holes.push(hole);
+  }
+  var moleTimer = setInterval(function() {
+    holes.forEach(function(h) { h.classList.remove('active'); h.textContent = ''; });
+    var idx = Math.floor(Math.random()*9);
+    holes[idx].classList.add('active');
+    holes[idx].textContent = '🐹';
+  }, 800);
+  gameInterval = setInterval(function() {
+    var elapsed = (Date.now() - startTime) / 1000;
+    var pct = Math.max(0, (1 - elapsed / timeLeft) * 100);
+    document.getElementById('gameTimerFill').style.width = pct + '%';
+    if (elapsed >= timeLeft) {
+      clearInterval(gameInterval); gameInterval = null;
+      clearInterval(moleTimer);
+      holes.forEach(function(h) { h.classList.remove('active'); h.textContent = ''; });
+      if (score > best) { localStorage.setItem('nexus_game_mole_best', score.toString()); }
+      var newBest = parseInt(localStorage.getItem('nexus_game_mole_best') || '0');
+      var msg = score >= 12 ? '🏆 地鼠终结者！' : score >= 8 ? '🔥 手速惊人！' : score >= 5 ? '😊 不错！' : '💪 再来一次！';
+      showGameResult('打了 ' + score + ' 只！', msg + '<br>最高纪录: ' + newBest);
+    }
+  }, 50);
+}
+
 /* ============ UTILS ============ */
 function escHtml(s) {
-  const d = document.createElement('div');
+  var d = document.createElement('div');
   d.textContent = s;
   return d.innerHTML;
 }
 
 /* ============ PARTICLE BACKGROUND ============ */
 (function initParticles() {
-  const canvas = document.getElementById('particleCanvas');
-  const ctx = canvas.getContext('2d');
-  let particles = [];
-  let mouse = { x: -1000, y: -1000 };
-  let ripples = [];
-  const PARTICLE_COUNT = 80;
-  const MAX_DIST = 120;
-  const MOUSE_RADIUS = 150;
+  var canvas = document.getElementById('particleCanvas');
+  var ctx = canvas.getContext('2d');
+  var particles = [];
+  var mouse = { x: -1000, y: -1000 };
+  var ripples = [];
+  var PARTICLE_COUNT = 80;
+  var MAX_DIST = 120;
+  var MOUSE_RADIUS = 150;
 
-  function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
   resize();
   window.addEventListener('resize', resize);
+  document.addEventListener('mousemove', function(e) { mouse.x = e.clientX; mouse.y = e.clientY; });
+  document.addEventListener('click', function(e) { ripples.push({ x: e.clientX, y: e.clientY, r: 0, alpha: 0.4 }); });
 
-  document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-  document.addEventListener('click', e => {
-    ripples.push({ x: e.clientX, y: e.clientY, r: 0, alpha: 0.6 });
-  });
-
-  // Init particles
-  for (let i = 0; i < PARTICLE_COUNT; i++) {
+  for (var i = 0; i < PARTICLE_COUNT; i++) {
     particles.push({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
       vx: (Math.random() - 0.5) * 0.5,
       vy: (Math.random() - 0.5) * 0.5,
       r: Math.random() * 2 + 1,
-      color: Math.random() > 0.5 ? 'rgba(0,212,255,' : 'rgba(124,58,237,'
+      color: Math.random() > 0.5 ? 'rgba(255,107,53,' : 'rgba(255,179,71,'
     });
   }
 
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Update & draw particles
-    particles.forEach(p => {
-      // Mouse repulsion
-      const dx = p.x - mouse.x;
-      const dy = p.y - mouse.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
+    particles.forEach(function(p) {
+      var dx = p.x - mouse.x;
+      var dy = p.y - mouse.y;
+      var dist = Math.sqrt(dx * dx + dy * dy);
       if (dist < MOUSE_RADIUS && dist > 0) {
-        const force = (MOUSE_RADIUS - dist) / MOUSE_RADIUS * 0.02;
+        var force = (MOUSE_RADIUS - dist) / MOUSE_RADIUS * 0.02;
         p.vx += dx / dist * force;
         p.vy += dy / dist * force;
       }
-      
       p.x += p.vx;
       p.y += p.vy;
-      
-      // Damping
       p.vx *= 0.999;
       p.vy *= 0.999;
-      
-      // Wrap
       if (p.x < 0) p.x = canvas.width;
       if (p.x > canvas.width) p.x = 0;
       if (p.y < 0) p.y = canvas.height;
       if (p.y > canvas.height) p.y = 0;
-      
-      // Draw
-      const alpha = 0.4 + Math.sin(Date.now() * 0.001 + p.x) * 0.2;
+      var alpha = 0.3 + Math.sin(Date.now() * 0.001 + p.x) * 0.15;
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
       ctx.fillStyle = p.color + alpha + ')';
       ctx.fill();
     });
-    
-    // Draw lines
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+    for (var i = 0; i < particles.length; i++) {
+      for (var j = i + 1; j < particles.length; j++) {
+        var dx = particles[i].x - particles[j].x;
+        var dy = particles[i].y - particles[j].y;
+        var dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < MAX_DIST) {
-          const alpha = (1 - dist / MAX_DIST) * 0.15;
+          var alpha = (1 - dist / MAX_DIST) * 0.1;
           ctx.beginPath();
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = `rgba(0,212,255,${alpha})`;
+          ctx.strokeStyle = 'rgba(255,107,53,' + alpha + ')';
           ctx.lineWidth = 0.5;
           ctx.stroke();
         }
       }
     }
-    
-    // Ripples
-    ripples = ripples.filter(r => {
+    ripples = ripples.filter(function(r) {
       r.r += 3;
-      r.alpha -= 0.015;
+      r.alpha -= 0.012;
       if (r.alpha <= 0) return false;
       ctx.beginPath();
       ctx.arc(r.x, r.y, r.r, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(0,212,255,${r.alpha})`;
+      ctx.strokeStyle = 'rgba(255,107,53,' + r.alpha + ')';
       ctx.lineWidth = 1.5;
       ctx.stroke();
       return true;
     });
-    
     requestAnimationFrame(animate);
   }
   animate();
