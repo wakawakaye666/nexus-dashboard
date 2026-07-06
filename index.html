@@ -377,16 +377,16 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--bg-p
     <div class="clock" id="realTimeClock">00:00:00</div>
   </div>
   <nav class="sidebar-nav">
-    <div class="nav-item active" data-page="dashboard"><span class="nav-icon">◈</span>仪表盘</div>
-    <div class="nav-item" data-page="todos"><span class="nav-icon">☑</span>待办事项</div>
-    <div class="nav-item" data-page="timer"><span class="nav-icon">◷</span>时间追踪</div>
-    <div class="nav-item" data-page="habits"><span class="nav-icon">◎</span>习惯打卡</div>
-    <div class="nav-item" data-page="news"><span class="nav-icon">⬡</span>AI资讯</div>
-    <div class="nav-item" data-page="academic"><span class="nav-icon">◇</span>学术前沿</div>
-    <div class="nav-item" data-page="settings"><span class="nav-icon">⚙</span>数据管理</div>
+    <div class="nav-item active" data-page="dashboard"><span class="nav-icon">📊</span>仪表盘</div>
+    <div class="nav-item" data-page="todos"><span class="nav-icon">📝</span>待办事项</div>
+    <div class="nav-item" data-page="timer"><span class="nav-icon">⏱️</span>时间追踪</div>
+    <div class="nav-item" data-page="habits"><span class="nav-icon">🔥</span>习惯打卡</div>
+    <div class="nav-item" data-page="news"><span class="nav-icon">🤖</span>AI资讯</div>
+    <div class="nav-item" data-page="academic"><span class="nav-icon">🎓</span>学术前沿</div>
+    <div class="nav-item" data-page="settings"><span class="nav-icon">🛡️</span>数据管理</div>
   </nav>
   <div class="sidebar-footer">
-    <div class="version">NEXUS v4.0 · Warm Edition</div>
+    <div class="version">NEXUS v4.1 · Warm Edition</div>
     <div class="data-status" id="dataStatus"></div>
   </div>
 </aside>
@@ -401,10 +401,10 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--bg-p
     <div class="page-subtitle">全局概览 · 效率中枢</div>
   </div>
   <div class="grid-4 mb-20" id="statCards">
-    <div class="card stat-card"><div class="stat-icon">☑</div><div class="stat-value" id="statTodos">0</div><div class="stat-label">待办事项</div><div class="stat-change up" id="statTodosSub"></div></div>
-    <div class="card stat-card"><div class="stat-icon">◷</div><div class="stat-value" id="statTime">0h</div><div class="stat-label">今日专注</div><div class="stat-change up" id="statTimeSub"></div></div>
-    <div class="card stat-card"><div class="stat-icon">◎</div><div class="stat-value" id="statHabits">0</div><div class="stat-label">习惯打卡</div><div class="stat-change up" id="statHabitsSub"></div></div>
-    <div class="card stat-card"><div class="stat-icon">⬡</div><div class="stat-value" id="statNews">16</div><div class="stat-label">AI资讯</div><div class="stat-change" id="statNewsSub"></div></div>
+    <div class="card stat-card"><div class="stat-icon">📝</div><div class="stat-value" id="statTodos">0</div><div class="stat-label">待办事项</div><div class="stat-change up" id="statTodosSub"></div></div>
+    <div class="card stat-card"><div class="stat-icon">⏱️</div><div class="stat-value" id="statTime">0h</div><div class="stat-label">今日专注</div><div class="stat-change up" id="statTimeSub"></div></div>
+    <div class="card stat-card"><div class="stat-icon">🔥</div><div class="stat-value" id="statHabits">0</div><div class="stat-label">习惯打卡</div><div class="stat-change up" id="statHabitsSub"></div></div>
+    <div class="card stat-card"><div class="stat-icon">🤖</div><div class="stat-value" id="statNews">16</div><div class="stat-label">AI资讯</div><div class="stat-change" id="statNewsSub"></div></div>
   </div>
   <div class="grid-2-1 mb-20">
     <div class="card">
@@ -674,7 +674,7 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--bg-p
     <button class="modal-close" onclick="closeHabitModal()">✕</button>
     <div class="modal-title">新建习惯</div>
     <div class="form-group"><label class="form-label">习惯名称</label><input class="input" id="habitInput" placeholder="如: 每日阅读30分钟"></div>
-    <div class="form-group"><label class="form-label">图标</label><select class="select" id="habitIcon"><option>📖</option><option>🏃</option><option>💧</option><option>🧘</option><option>💻</option><option>🎵</option><option>✍️</option><option>🥗</option><option>😴</option><option>🌅</option></select></div>
+    <div class="form-group"><label class="form-label">图标</label><select class="select" id="habitIcon"><option value="📖">📖 阅读</option><option value="🏃">🏃 运动</option><option value="💧">💧 喝水</option><option value="🧘">🧘 冥想</option><option value="💻">💻 编程</option><option value="🎵">🎵 音乐</option><option value="✍️">✍️ 写作</option><option value="🥗">🥗 健康饮食</option><option value="😴">😴 早睡</option><option value="🌅">🌅 早起</option><option value="🎯">🎯 专注</option><option value="📝">📝 日记</option><option value="🌿">🌿 散步</option><option value="💪">💪 健身</option><option value="🧠">🧠 学习</option><option value="🎨">🎨 绘画</option><option value="📸">📸 拍照</option><option value="🍎">🍎 吃水果</option><option value="🦷">🦷 刷牙</option><option value="💊">💊 吃药</option></select></div>
     <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:18px">
       <button class="btn" onclick="closeHabitModal()">取消</button>
       <button class="btn btn-primary" onclick="addHabit()">创建</button>
@@ -941,7 +941,7 @@ function mergeLegacyData(data, sourceKey) {
         state.habits.push({
           id: habit.id || Date.now() + Math.random(),
           name: habit.name,
-          emoji: habit.emoji || '⭐',
+          icon: habit.icon || habit.emoji || '⭐',
           color: habit.color || '#FF6B35',
           checkins: habit.checkins || {},
           createdAt: habit.createdAt || new Date().toISOString()
@@ -996,7 +996,7 @@ function validateStateData() {
   if (!Array.isArray(state.timeLogs)) { state.timeLogs = []; fixed = true; }
   if (!Array.isArray(state.habits)) { state.habits = []; fixed = true; }
   state.habits = state.habits.filter(h => h && h.name);
-  state.habits.forEach(h => { if (!h.checkins || typeof h.checkins !== 'object') h.checkins = {}; });
+  state.habits.forEach(h => { if (!h.checkins || typeof h.checkins !== 'object') h.checkins = {}; if (!h.icon && h.emoji) { h.icon = h.emoji; } if (!h.icon) h.icon = '⭐'; });
   state.todos = state.todos.filter(t => t && t.text);
   if (fixed) {
     addMigrationLog('数据完整性修复：修正了异常字段', 'warn');
@@ -1430,7 +1430,7 @@ function renderTodos() {
   items.sort(function(a, b) { return (a.completed - b.completed) || (priorityOrder[a.priority] - priorityOrder[b.priority]); });
   var container = document.getElementById('todoList');
   if (!container) return;
-  if (items.length === 0) { container.innerHTML = '<div class="empty-state"><div class="icon">☑</div><p>暂无任务</p></div>'; return; }
+  if (items.length === 0) { container.innerHTML = '<div class="empty-state"><div class="icon">📝</div><p>暂无任务</p></div>'; return; }
   container.innerHTML = items.map(function(t) {
     var pClass = 'priority-' + t.priority;
     var pIcon = t.priority === 'high' ? '🔴' : t.priority === 'medium' ? '🟡' : '🟢';
@@ -1575,9 +1575,11 @@ async function checkinHabit(id) {
   };
   saveState();
   renderHabits();
-  refreshDashboard();
-  // Trigger random mini-game
-  triggerRandomGame();
+  try { refreshDashboard(); } catch(e) { console.warn('Dashboard refresh error:', e); }
+  // Trigger random mini-game with slight delay to ensure UI is ready
+  setTimeout(function() {
+    try { triggerRandomGame(); } catch(e) { console.error('Game trigger error:', e); }
+  }, 300);
 }
 
 function getHabitStreak(habit) {
@@ -1593,7 +1595,7 @@ function getHabitStreak(habit) {
 function renderHabits() {
   var el = document.getElementById('habitList');
   if (!el) return;
-  if (state.habits.length === 0) { el.innerHTML = '<div class="empty-state"><div class="icon">◎</div><p>暂无习惯，点击上方创建</p></div>'; return; }
+  if (state.habits.length === 0) { el.innerHTML = '<div class="empty-state"><div class="icon">🔥</div><p>暂无习惯，点击上方创建</p></div>'; return; }
   var today = new Date().toISOString().slice(0, 10);
   var dayLabels = ['日','一','二','三','四','五','六'];
   el.innerHTML = state.habits.map(function(h) {
@@ -1607,7 +1609,8 @@ function renderHabits() {
       var isToday = key === today;
       weekDays.push('<div class="habit-day ' + (h.checkins[key] ? 'done' : '') + ' ' + (isToday ? 'today' : '') + '">' + dayLabels[d.getDay()] + '</div>');
     }
-    return '<div class="habit-card"><div class="habit-header"><span style="font-size:1.3rem">' + h.icon + '</span><span class="habit-name">' + escHtml(h.name) + '</span><span class="habit-streak">🔥 ' + streak + '天</span><button class="habit-checkin-btn ' + (done ? 'done' : '') + '" onclick="' + (done ? '' : "checkinHabit('" + h.id + "')") + '">' + (done ? '✓ 已打卡' : '打卡') + '</button><button class="btn btn-sm btn-danger" onclick="deleteHabit(\'' + h.id + '\')" style="margin-left:4px">✕</button></div>' + (weatherInfo ? '<div class="habit-weather">🌡 打卡时天气: ' + weatherInfo + '</div>' : '') + '<div class="habit-week">' + weekDays.join('') + '</div></div>';
+    var habitIcon = h.icon || h.emoji || '⭐';
+    return '<div class="habit-card"><div class="habit-header"><span style="font-size:1.3rem">' + habitIcon + '</span><span class="habit-name">' + escHtml(h.name) + '</span><span class="habit-streak">🔥 ' + streak + '天</span><button class="habit-checkin-btn ' + (done ? 'done' : '') + '" onclick="' + (done ? '' : "checkinHabit('" + h.id + "')") + '">' + (done ? '✓ 已打卡' : '打卡') + '</button><button class="btn btn-sm btn-danger" onclick="deleteHabit(\'' + h.id + '\')" style="margin-left:4px">✕</button></div>' + (weatherInfo ? '<div class="habit-weather">🌡 打卡时天气: ' + weatherInfo + '</div>' : '') + '<div class="habit-week">' + weekDays.join('') + '</div></div>';
   }).join('');
   renderHabitHeatmap();
   renderHabitStatChart();
@@ -1691,7 +1694,7 @@ function renderNews() {
   });
   var el = document.getElementById('newsList');
   if (!el) return;
-  if (items.length === 0) { el.innerHTML = '<div class="empty-state"><div class="icon">⬡</div><p>暂无匹配资讯</p></div>'; return; }
+  if (items.length === 0) { el.innerHTML = '<div class="empty-state"><div class="icon">🤖</div><p>暂无匹配资讯</p></div>'; return; }
   var catColors = {'大模型':'tag-orange','AI应用':'tag-purple','行业动态':'tag-green','政策法规':'tag-gold'};
   el.innerHTML = items.map(function(n) { return '<div class="news-card ' + (n.read ? 'read' : '') + '" onclick="toggleNewsRead(\'' + n.id + '\')"><div class="news-card-header"><div class="news-card-title"><a href="' + n.url + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">' + escHtml(n.title) + '</a></div></div><div class="news-card-summary">' + escHtml(n.summary) + '</div><div class="news-card-footer"><span class="tag ' + (catColors[n.category] || 'tag-orange') + '">' + n.category + '</span><span class="news-card-source">' + n.source + ' · ' + n.date + '</span><div class="news-actions"><button class="news-action-btn ' + (n.bookmarked ? 'bookmarked' : '') + '" onclick="event.stopPropagation();toggleNewsBookmark(\'' + n.id + '\')" title="收藏">' + (n.bookmarked ? '🔖' : '🏷') + '</button><a href="' + n.url + '" target="_blank" rel="noopener" class="news-action-btn" onclick="event.stopPropagation()" title="原文链接">🔗</a></div></div></div>'; }).join('');
 }
@@ -1713,7 +1716,7 @@ function renderAcademic() {
   });
   var el = document.getElementById('academicList');
   if (!el) return;
-  if (items.length === 0) { el.innerHTML = '<div class="empty-state"><div class="icon">◇</div><p>暂无匹配论文</p></div>'; return; }
+  if (items.length === 0) { el.innerHTML = '<div class="empty-state"><div class="icon">🎓</div><p>暂无匹配论文</p></div>'; return; }
   el.innerHTML = items.map(function(a) { return '<div class="academic-card"><div class="academic-title"><a href="' + a.url + '" target="_blank" rel="noopener">' + escHtml(a.title) + '</a></div><div class="academic-authors">' + escHtml(a.authors) + '</div><div class="academic-meta"><span class="tag tag-purple">' + a.venue + '</span><span style="font-size:.75rem;color:var(--text-dim)">' + a.date + '</span></div><div class="academic-summary">' + escHtml(a.summary) + '</div><div class="academic-tags">' + a.tags.map(function(t) { return '<span class="tag tag-orange">' + t + '</span>'; }).join('') + '</div></div>'; }).join('');
 }
 
