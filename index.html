@@ -30,20 +30,17 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--bg-p
 ::-webkit-scrollbar-thumb:hover{background:rgba(0,150,199,0.45)}
 
 /* Welcome Screen */
-#welcomeScreen{position:fixed;top:0;left:0;width:100%;height:100vh;z-index:9999;background:linear-gradient(135deg,#EFF9FB,#E3F5F7,#DFF3F0);display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;transition:opacity 0.8s ease,transform 0.8s ease}
-#welcomeScreen.fade-out{opacity:0;transform:scale(1.05);pointer-events:none}
-.welcome-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
-.welcome-glow{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(0,150,199,0.15),transparent 70%);pointer-events:none;transform:translate(-50%,-50%);transition:opacity 0.3s}
-.welcome-content{position:relative;z-index:2;text-align:center;transform-style:preserve-3d;perspective:1000px}
-.welcome-title{font-family:'Orbitron',sans-serif;font-size:5rem;font-weight:900;background:linear-gradient(135deg,#0096C7,#48CAE4,#00B4D8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:8px;text-shadow:none;margin-bottom:12px;transition:transform 0.1s ease-out}
-.welcome-subtitle{font-size:1.3rem;color:var(--text-secondary);letter-spacing:6px;margin-bottom:48px;font-weight:300}
-.welcome-tagline{font-size:0.9rem;color:var(--text-dim);margin-bottom:40px;letter-spacing:2px}
-.welcome-btn{padding:16px 48px;border-radius:50px;border:2px solid rgba(0,150,199,0.4);background:rgba(0,150,199,0.08);color:var(--accent-orange);font-size:1.1rem;font-family:'Inter',sans-serif;font-weight:600;cursor:pointer;letter-spacing:3px;transition:all 0.3s ease;position:relative;overflow:hidden}
-.welcome-btn:hover{background:rgba(0,169,179,0.12);border-color:rgba(0,150,199,0.6);box-shadow:0 0 40px rgba(0,153,181,0.15);transform:translateY(-2px)}
-.welcome-btn::before{content:'';position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;background:rgba(0,169,179,0.08);transform:translate(-50%,-50%);transition:width 0.6s,height 0.6s}
-.welcome-btn:hover::before{width:300px;height:300px}
-@keyframes breathe{0%,100%{box-shadow:0 0 20px rgba(0,150,199,0.15)}50%{box-shadow:0 0 40px rgba(0,153,181,0.2)}}
-.welcome-btn{animation:breathe 3s ease-in-out infinite}
+#welcomeScreen{position:fixed;top:0;left:0;width:100%;height:100vh;z-index:9999;background:linear-gradient(135deg,#EFF9FB,#E3F5F7,#DFF3F0,#E8F0FE);background-size:400% 400%;animation:welcomeGradient 20s ease infinite;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;transition:opacity 1s ease,transform 1s ease}
+@keyframes welcomeGradient{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+#welcomeScreen.fade-out{opacity:0;transform:scale(1.03);pointer-events:none}
+.welcome-content{text-align:center;position:relative;z-index:2;animation:welcomeFadeIn 1.5s ease}
+@keyframes welcomeFadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.welcome-title{font-family:'Orbitron',sans-serif;font-size:5.5rem;font-weight:900;background:linear-gradient(135deg,#0096C7,#48CAE4,#06D6A0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:12px;margin-bottom:8px;animation:welcomeGlow 4s ease-in-out infinite alternate}
+@keyframes welcomeGlow{from{filter:drop-shadow(0 0 20px rgba(0,150,199,0.15))}to{filter:drop-shadow(0 0 40px rgba(0,150,199,0.3))}}
+.welcome-subtitle{font-size:1.1rem;color:#4A6070;letter-spacing:8px;font-weight:300;margin-bottom:32px}
+.welcome-greeting{font-size:0.95rem;color:#8899AA;letter-spacing:3px;margin-bottom:48px;font-weight:300}
+.welcome-hint{position:absolute;bottom:60px;left:50%;transform:translateX(-50%);font-size:0.8rem;color:#8899AA;letter-spacing:4px;animation:welcomeHintPulse 2.5s ease-in-out infinite}
+@keyframes welcomeHintPulse{0%,100%{opacity:0.4}50%{opacity:1}}
 
 /* Particle Canvas */
 #particleCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
@@ -352,15 +349,13 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--bg-p
 <body>
 
 <!-- Welcome Screen -->
-<div id="welcomeScreen">
-  <canvas class="welcome-canvas" id="welcomeCanvas"></canvas>
-  <div class="welcome-glow" id="welcomeGlow"></div>
-  <div class="welcome-content" id="welcomeContent">
-    <div class="welcome-title" id="welcomeTitle">NEXUS</div>
+<div id="welcomeScreen" onclick="enterDashboard()">
+  <div class="welcome-content">
+    <div class="welcome-title">NEXUS</div>
     <div class="welcome-subtitle">个人效率仪表盘</div>
-    <div class="welcome-tagline">待办 · 时间 · 习惯 · 资讯 — 一切尽在掌握</div>
-    <button class="welcome-btn" id="welcomeBtn" onclick="enterDashboard()">进入仪表盘 →</button>
+    <div class="welcome-greeting" id="welcomeGreeting"></div>
   </div>
+  <div class="welcome-hint">轻触任意位置进入</div>
 </div>
 
 <canvas id="particleCanvas"></canvas>
@@ -386,7 +381,7 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--bg-p
     <div class="nav-item" data-page="settings"><span class="nav-icon">🛡️</span>数据管理</div>
   </nav>
   <div class="sidebar-footer">
-    <div class="version">NEXUS v4.3 · Ice Mint</div>
+    <div class="version">NEXUS v4.4 · Ice Mint</div>
     <div class="data-status" id="dataStatus"></div>
   </div>
 </aside>
@@ -697,29 +692,29 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--bg-p
 
 /* ============ DEFAULT DATA ============ */
 const DEFAULT_NEWS = [
-  {"id":"n1","title":"中国大模型改写硅谷价格表，智谱GLM-5.2性能比肩美国旗舰","summary":"路透社报道，智谱AI推出GLM-5.2，编码和代理能力媲美美国领先产品，成本却极低。前白宫AI负责人David Sacks称其与OpenAI和Anthropic模型性能相当。全球前五AI模型中，前四均为中国模型。","source":"中新经纬","url":"http://m.toutiao.com/group/7658575361403290138/","category":"大模型","date":"2026-07-05","read":false,"bookmarked":false},
-  {"id":"n2","title":"GPT-5.6三大子模型曝光：Sol、Terra、Luna，7月7日发布","summary":"网友在Codex应用代码中发现GPT-5.6的三大子模型标识：sol、terra和luna。OpenAI内部定档7月7日至9日发布。全新「速度拨盘」功能允许用户在速度和质量间自由调节。","source":"36氪","url":"https://36kr.com/p/3880971920584962","category":"大模型","date":"2026-07-05","read":false,"bookmarked":false},
-  {"id":"n3","title":"美团发布万亿参数LongCat-2.0模型并宣布开源","summary":"美团正式发布新一代万亿参数大模型LongCat-2.0，在五万卡国产算力集群上完成全流程训练，总参数1.6T，预训练数据超30T tokens，原生支持1M超长上下文，并将对外开源。","source":"钛媒体","url":"http://m.toutiao.com/group/7658636594840945215/","category":"大模型","date":"2026-07-05","read":false,"bookmarked":false},
-  {"id":"n4","title":"华为开源盘古openPangu-2.0-Flash：920亿参数","summary":"华为开源盘古920亿参数的openPangu-2.0-Flash模型正式开源上线，致力于通过昇腾原生训练与推理技术，为业界用好昇腾提供最佳实践参考。","source":"钛媒体","url":"http://m.toutiao.com/group/7658636594840945215/","category":"大模型","date":"2026-07-05","read":false,"bookmarked":false},
-  {"id":"n5","title":"DeepSeek、Qwen受热捧：中国AI周调用量连续八周超美国","summary":"花旗研报显示，2026年6月OpenRouter平台开源模型Token占比升至65%，中国AI大模型周调用量18.81万亿Token，连续八周超美国，稳居全球首位。DeepSeek、Qwen等成海外企业降本首选。","source":"中新经纬","url":"http://m.toutiao.com/group/7658575361403290138/","category":"大模型","date":"2026-07-05","read":false,"bookmarked":false},
-  {"id":"n6","title":"豆包、千问集体宣布：智能体功能将于7月15日下线","summary":"7月4日，豆包发布智能体功能下线通知，称由于产品功能调整将于7月15日下线。同日阿里千问APP内也发布类似公告。用户需在10月15日前备份重要数据。","source":"中国蓝新闻","url":"http://m.toutiao.com/group/7658565321665692160/","category":"AI应用","date":"2026-07-05","read":false,"bookmarked":false},
-  {"id":"n7","title":"AI微短剧井喷：一季度全网上线12.8万部，95%为AI制作","summary":"2026两岸青年峰会期间，台湾导演薛颖穜展示AI动画作品，表示AI已颠覆创作模式。中国网络视听协会数据显示，一季度全网上线微短剧约12.8万部，AI微短剧占比超95%。","source":"央广网","url":"http://m.toutiao.com/group/7658633689265340991/","category":"AI应用","date":"2026-07-05","read":false,"bookmarked":false},
-  {"id":"n8","title":"一人公司OPC崛起：AI工具助力千元的科幻电影入围国际电影节","summary":"北京宙域锚点科技创始人「鸽九楠」单人借助AI工具制作科幻电影，成本千元左右、半月完工，已入围多个国际电影节。海淀区出台政策支持OPC创业，单户最高支持1000万元贷款。","source":"证券时报","url":"http://m.toutiao.com/group/7658546849918075455/","category":"AI应用","date":"2026-07-05","read":false,"bookmarked":false},
-  {"id":"n9","title":"智平方完成近50亿元融资，刷新AI领域融资纪录","summary":"据钛媒体数智周报，智平方完成近50亿元融资，刷新AI领域融资纪录。同日可灵AI落地近30亿美元融资，Anthropic推出Claude Science平台。AI行业持续获资本青睐。","source":"钛媒体","url":"http://m.toutiao.com/group/7658636594840945215/","category":"AI应用","date":"2026-07-05","read":false,"bookmarked":false},
-  {"id":"n10","title":"数字经济产业博览会：大模型已深度扎根实体经济","summary":"2026数字经济产业博览会上，小雨智造焊接机械臂精度达±0.5毫米，智谱GLM-5.2开源模型亮相，AI微短剧、AI清洁机器人等六大展区共同印证大模型已深度扎根具体场景。","source":"证券时报","url":"http://m.toutiao.com/group/7658546849918075455/","category":"行业动态","date":"2026-07-05","read":false,"bookmarked":false},
-  {"id":"n11","title":"银河国际动态因果推理框架发布，被MIT教授评价为十年最重要理论突破","summary":"银河国际团队发布动态因果推理框架，能从观测数据自动提取因果图，在化工过程控制实验中显著降低工业部署成本。MIT教授本吉奥评价其为近十年最重要的理论突破。","source":"钛媒体","url":"http://m.toutiao.com/group/7658636594840945215/","category":"行业动态","date":"2026-07-05","read":false,"bookmarked":false},
-  {"id":"n12","title":"无界动力发布MWA世界模型，超越英伟达GR00T登顶具身智能榜单","summary":"无界动力发布全球首个「长时序双向物理因果链」隐空间世界模型MWA™，在斯坦福等顶尖机构联合发起的RoboCasa GR1 TableTop榜单登顶，超越英伟达GR00T-N1.6等主流模型。","source":"钛媒体","url":"http://m.toutiao.com/group/7658636594840945215/","category":"行业动态","date":"2026-07-05","read":false,"bookmarked":false},
-  {"id":"n13","title":"韩国AI预算提高三倍至9.9万亿韩元，志在跻身全球前三","summary":"韩国政府战略性地重新审视自主AI基础模式构建，将AI预算提高至9.9万亿韩元（去年的三倍），目标是到2030年在物理AI领域跃居全球第一，到2035年建成18.4吉瓦数据中心容量。","source":"钛媒体","url":"http://m.toutiao.com/group/7658636594840945215/","category":"行业动态","date":"2026-07-05","read":false,"bookmarked":false},
-  {"id":"n14","title":"大陆十项涉台新政：支持台湾业者参与AI微短剧创作","summary":"大陆十项涉台新政明确支持岛内业者参与大陆AI微短剧创作。台湾业界认为这为台湾创作者提供更多机遇，AI重新定义创作门槛，「不必科班出身，只要有好点子，就能实现表达」。","source":"央广网","url":"http://m.toutiao.com/group/7658633689265340991/","category":"政策法规","date":"2026-07-05","read":false,"bookmarked":false},
-  {"id":"n15","title":"微短剧分类分层标准7月1日起正式执行，行业从数量驱动转向质量驱动","summary":"大陆AI微短剧分类分层标准于7月1日正式执行。台湾导演薛颖穜认为此举有助行业从数量驱动转向质量驱动，期待借大陆资源平台与惠台政策利好，讲好中国故事。","source":"央广网","url":"http://m.toutiao.com/group/7658633689265340991/","category":"政策法规","date":"2026-07-05","read":false,"bookmarked":false}
+  {"id":"n1","title":"OpenAI正式发布GPT-5.6：三大层级Sol/Terra/Luna，新增速度拨盘功能","summary":"OpenAI发布GPT-5.6，设旗舰Sol（30美元/百万Token）、均衡Terra（15美元）、轻量Luna（6美元）三个层级。新增速度拨盘功能允许用户在响应速度和质量间自由调节，推理成本较GPT-5降低约40%。","source":"OpenAI官方","url":"https://openai.com/blog","category":"大模型","date":"2026-07-07","read":false,"bookmarked":false},
+  {"id":"n2","title":"腾讯混元HIGH3发布：MoE架构295B参数，支持百万Token上下文","summary":"腾讯正式发布混元大模型HIGH3，采用混合专家架构，总参数295B，支持100万token上下文与多智能体协同，推出行业模板库覆盖金融、医疗、工业等12个垂直领域，中小企业推理成本预计降低40%。","source":"21世纪经济报道","url":"http://m.toutiao.com/group/7659731921739448878/","category":"大模型","date":"2026-07-07","read":false,"bookmarked":false},
+  {"id":"n3","title":"中国AI大模型在美悄然崛起：企业Token调用占比持续超30%","summary":"OpenRouter数据显示，自2月起美国企业调用中国AI模型Token占比每周超30%，峰值达46%。DeepSeek、智谱GLM 5.2等模型性能比肩美国旗舰，成本却低60%-90%。Lindy从Anthropic切换至DeepSeek后每年节省数百万美元。","source":"科创板日报","url":"http://m.toutiao.com/group/7659708508107768355/","category":"大模型","date":"2026-07-07","read":false,"bookmarked":false},
+  {"id":"n4","title":"DeepSeek V4倒计时8天：原生多智能体协同，推理成本降35%","summary":"DeepSeek发布V4版本技术细节：原生支持多智能体协同、长文本结构化解析，峰谷分时算力定价系统全面就绪，中小企业推理成本预计下降35%，将推出行业知识图谱插件覆盖金融、法律、医疗等领域。","source":"微博科技","url":"https://m.weibo.cn/detail/5318001601285982","category":"大模型","date":"2026-07-07","read":false,"bookmarked":false},
+  {"id":"n5","title":"清华阿里JustGRPO获ICML 2026杰出论文奖：中国高校与企业首次获此认可","summary":"清华大学与阿里巴巴联合团队凭借JustGRPO算法获ICML 2026杰出论文奖（全球仅两篇），揭示了序列生成顺序对扩散模型推理能力的根本性影响，为AI推理能力提升开辟新路径。","source":"ICML 2026","url":"http://m.toutiao.com/group/7659731921739448878/","category":"大模型","date":"2026-07-07","read":false,"bookmarked":false},
+  {"id":"n6","title":"字节豆包、阿里千问集体宣布：智能体功能7月15日下线","summary":"字节豆包和阿里千问先后宣布7月15日起下线智能体功能，用户可在限期内保存数据。官方表示将资源集中于核心大模型能力提升，后续推出更轻量化AI助手方案。","source":"央广网","url":"http://m.toutiao.com/group/7659731921739448878/","category":"AI应用","date":"2026-07-07","read":false,"bookmarked":false},
+  {"id":"n7","title":"百度文心一言App升级：深度阅读+图表生成+AI论文助手","summary":"百度文心一言App新增深度阅读与图表生成功能，支持上传百页级报告自动提取论点生成脑图，同步推出AI论文助手可辅助撰写学术论文并自动生成引用格式。","source":"微博科技","url":"https://m.weibo.cn/detail/5318001601285982","category":"AI应用","date":"2026-07-07","read":false,"bookmarked":false},
+  {"id":"n8","title":"Anthropic签署190亿美元数据中心租赁合同，锁定20年算力","summary":"Anthropic与TeraWulf签署20年租赁合同，在肯塔基州建设专用AI基础设施园区，预计产生约190亿美元合约收入。前加密矿场转型高性能计算，AI实验室从租用云算力转向锁定工业级基础设施。","source":"Data Center Dynamics","url":"https://techstartups.com/2026/07/07/top-tech-news-today-july-7-2026/","category":"AI应用","date":"2026-07-07","read":false,"bookmarked":false},
+  {"id":"n9","title":"中央网信办清朗行动：累计处置违规AI产品1.4万余款","summary":"中央网信办清朗·整治AI应用乱象专项行动第一阶段累计处置违规AI产品1.4万余款，清理违法信息600余万条，处置账号2.6万余个。第二阶段将聚焦AI虚假信息和侵害未成年人权益等问题。","source":"网信中国","url":"http://m.toutiao.com/group/7659760757747270195/","category":"政策法规","date":"2026-07-07","read":false,"bookmarked":false},
+  {"id":"n10","title":"2026世界人工智能大会预告：7月17-20日全球首发300余款AI产品","summary":"WAIC 2026将在浦东世博、张江和徐汇西岸举办，全球首发华为Atlas 950超节点、阶跃Agent操作系统、全球首款AI智能体手机等300余款产品。9位图灵奖、诺贝尔奖得主确认参会。","source":"上海发布","url":"http://m.toutiao.com/group/7659773403214840339/","category":"行业动态","date":"2026-07-07","read":false,"bookmarked":false},
+  {"id":"n11","title":"国内首个结构化数据通用大模型极数落地60+真实场景","summary":"国内首个处理结构化数据的通用大模型极数在冶金、电力、电信等60多个场景完成验证。不同于传统LLM，极数专注于从结构化数据中分析规律、推理因果，为工业智能决策提供底层支撑。","source":"微博科技","url":"https://m.weibo.cn/detail/5318001601285982","category":"行业动态","date":"2026-07-07","read":false,"bookmarked":false},
+  {"id":"n12","title":"上海发布AI+制造专项措施：最高500万元奖励标杆企业","summary":"上海发布《AI+制造专项措施》13条支持举措，重点扶持工业智能体应用、高质量工业数据集建设、具身智能进工厂等方向，对标杆企业给予最高500万元奖励，推动AI赋能新型工业化。","source":"微博科技","url":"https://m.weibo.cn/detail/5318001601285982","category":"行业动态","date":"2026-07-07","read":false,"bookmarked":false},
+  {"id":"n13","title":"OpenAI自研推理芯片Jalapeño设计定稿，年底启动流片","summary":"OpenAI确认自研推理芯片Jalapeño设计完成，计划年底流片。该芯片专为GPT系列优化，能效比预计提升50%，将缓解对NVIDIA芯片依赖。同时推进IPO合规审查，预计2027年初上市。","source":"微博科技","url":"https://m.weibo.cn/detail/5318001601285982","category":"行业动态","date":"2026-07-07","read":false,"bookmarked":false},
+  {"id":"n14","title":"全球数据要素论坛：呼吁构建AI-Ready国家战略","summary":"2026全球数字经济大会第六届中国数据要素50人论坛提出构建国家AI-Ready战略，从治理、产业、社会、个体四层面实施。同时呼吁加快推进人工智能综合性立法进程。","source":"人民网","url":"http://m.toutiao.com/group/7659720825909641743/","category":"政策法规","date":"2026-07-07","read":false,"bookmarked":false},
+  {"id":"n15","title":"Nscale获9亿美元信贷额度，华尔街级融资加速AI算力扩张","summary":"英国AI基础设施初创Nscale获9亿美元循环信贷额度，由摩根大通、高盛等参与，加速美欧亚数据中心建设。AI云初创正用华尔街级融资工具与大型科技公司的基础设施机器竞争。","source":"PRNewswire","url":"https://techstartups.com/2026/07/07/top-tech-news-today-july-7-2026/","category":"行业动态","date":"2026-07-07","read":false,"bookmarked":false}
 ];
 
 const DEFAULT_ACADEMIC = [
-  {"id":"a1","title":"Dynamic Causal Representation Learning: A New Paradigm for Causal AI","authors":"银河国际团队","venue":"ICML 2026","date":"2026-07-05","summary":"银河国际团队发布动态因果推理框架，能从观测数据自动提取因果图，无需专家知识。MIT教授乔舒亚·本吉奥评价其为近十年最重要的理论突破，被谷歌、微软等争相洽谈合作。","tags":["因果推理","ICML","理论突破"],"url":"http://m.toutiao.com/group/7658636594840945215/"},
-  {"id":"a2","title":"MWA™: Long-term Bidirectional Physical Causal Chain World Model","authors":"无界动力","venue":"RoboCasa GR1 TableTop Benchmark","date":"2026-07-05","summary":"无界动力发布全球首个「长时序双向物理因果链」隐空间世界模型，通过Chunk级逆向动力学建模，为机器人在多元复杂场景下的长时间连贯精准任务执行提供新方案，登顶具身智能权威榜单。","tags":["具身智能","世界模型","RoboCasa"],"url":"http://m.toutiao.com/group/7658636594840945215/"},
-  {"id":"a3","title":"Elements Claw: AI Agent Discovers 4 New Superconducting Materials","authors":"阿里达摩院","venue":"arXiv / 内部预印本","date":"2026-07-05","summary":"阿里达摩院联合中国人民大学、中国科学院大学发布首个超导材料发现AI智能体Elements Claw，预测出6.8万个可能的超导材料，其中4种全新材料已合成并证实存在超导性，相关数据全部开放。","tags":["AI4Science","超导材料","达摩院"],"url":"http://m.toutiao.com/group/7658636594840945215/"},
-  {"id":"a4","title":"V2版「韬定律」：面向多层级电子系统的时间缩微理论","authors":"何庭波（华为半导体负责人）","venue":"ChinaXiv","date":"2026-07-05","summary":"华为何庭波发布「韬定律」V2版本，补充大量工程落地细节、实测量化数据和产品演进路线。新增量产实测数据，明确Kirin2026与Kirin9030Pro的性能对比参数，完善后摩尔时代缩放理论体系。","tags":["半导体","后摩尔定律","华为"],"url":"http://m.toutiao.com/group/7658636594840945215/"},
-  {"id":"a5","title":"上海创智学院首届博士毕业：四力评价体系突破传统人才评价","authors":"上海创智学院","venue":"Nature / ICML 2026","date":"2026-07-05","summary":"创立不到两年的上海创智学院迎来首届6名博士毕业生。他们采用「四力」评价体系（研究影响力、开发影响力、产业影响力、社会影响力），已孵化26家师生企业，估值超40亿元。","tags":["AI教育","人才培养","产学研"],"url":"http://m.toutiao.com/group/7658464641357562418/"}
+  {"id":"a1","title":"JustGRPO: Revealing the Impact of Sequence Generation Order on Diffusion Model Reasoning","authors":"清华大学 & 阿里巴巴联合团队","venue":"ICML 2026 (杰出论文奖)","date":"2026-07-07","summary":"揭示序列生成顺序对扩散模型推理能力的根本性影响，为AI推理能力提升开辟新路径。该论文获ICML 2026杰出论文奖（全球仅两篇），是中国高校与企业联合首次获此殊荣。","tags":["扩散模型","推理能力","ICML 2026"],"url":"https://arxiv.org/abs/2601.15165"},
+  {"id":"a2","title":"Direct Orbital Current Read/Write for Information Processing","authors":"C. Schmidt, M. Kläui et al.","venue":"Science","date":"2026-07-07","summary":"德国美茵茨大学团队首次实现直接利用轨道电流进行信息读写，无需转换为自旋电流，信号强度提升200倍。构建了氧化钴/铜薄膜模型系统，为新一代自旋电子器件开辟新方向。","tags":["自旋电子学","轨道电子学","Science"],"url":"http://m.toutiao.com/group/7659731921739448878/"},
+  {"id":"a3","title":"碳-14核电池与碳化硅换能器全链条自主化突破","authors":"西北师范大学 & 甘肃烛龙科技","venue":"发布报告","date":"2026-07-07","summary":"发布新一代碳-14核电池，半衰期5730年、理论续航数千年，可在-100℃至200℃极端温度稳定工作。放射源用量仅为前代22%，输出功率提升2.6倍，体积功率密度提升15.5倍，综合性能国际领先。","tags":["核电池","深空探测","同位素能源"],"url":"http://m.toutiao.com/group/7659731921739448878/"},
+  {"id":"a4","title":"6G产业化验证中试平台启动：超300项关键技术储备形成","authors":"上海6G中试平台","venue":"技术报告","date":"2026-07-07","summary":"上海6G产业化验证中试平台正式启动，主攻智能模组、新型终端、空天地一体化网络设备和智能机器人四大领域。已完成第一阶段技术试验，形成超300项关键技术储备，重点解决6G候选技术的工程化验证。","tags":["6G","空天地一体化","中试验证"],"url":"http://m.toutiao.com/group/7659731921739448878/"},
+  {"id":"a5","title":"AI综合治理与数据要素制度建设：一法统领五位一体框架","authors":"中国数据要素50人论坛","venue":"2026全球数字经济大会","date":"2026-07-07","summary":"提出构建一法统领、五位一体的AI综合治理制度框架：实施大模型全周期差异化监管、规范训练数据与跨境流动、细化侵权责任、推动伦理入法、统筹国内国际治理规则对接。","tags":["AI治理","数据产权","人工智能立法"],"url":"http://m.toutiao.com/group/7659720825909641743/"}
 ];
 
 /* ============ DATA PROTECTION SYSTEM ============ */
@@ -1224,104 +1219,17 @@ function deleteBackup(key) {
     document.getElementById('welcomeScreen').style.display = 'none';
     return;
   }
-  const canvas = document.getElementById('welcomeCanvas');
-  const ctx = canvas.getContext('2d');
-  const glow = document.getElementById('welcomeGlow');
-  const content = document.getElementById('welcomeContent');
-  const title = document.getElementById('welcomeTitle');
-  let particles = [];
-  let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
-
-  function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  // Welcome particles
-  for (let i = 0; i < 100; i++) {
-    particles.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      vx: (Math.random() - 0.5) * 0.8,
-      vy: (Math.random() - 0.5) * 0.8,
-      r: Math.random() * 3 + 1,
-      color: ['rgba(0,150,199,','rgba(72,202,228,','rgba(0,180,216,','rgba(123,158,240,'][Math.floor(Math.random()*4)]
-    });
-  }
-
-  document.addEventListener('mousemove', function(e) {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-    // Glow follow
-    if (glow) {
-      glow.style.left = e.clientX + 'px';
-      glow.style.top = e.clientY + 'px';
-      glow.style.opacity = '1';
-    }
-    // Title parallax
-    if (title) {
-      const cx = window.innerWidth / 2;
-      const cy = window.innerHeight / 2;
-      const rx = (e.clientY - cy) / cy * -5;
-      const ry = (e.clientX - cx) / cx * 5;
-      title.style.transform = 'perspective(1000px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)';
-    }
-  });
-
-  function animate() {
-    if (document.getElementById('welcomeScreen').style.display === 'none') return;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach(p => {
-      const dx = p.x - mouse.x;
-      const dy = p.y - mouse.y;
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      if (dist < 150 && dist > 0) {
-        const force = (150 - dist) / 150 * 0.03;
-        p.vx += dx/dist * force;
-        p.vy += dy/dist * force;
-      }
-      p.x += p.vx;
-      p.y += p.vy;
-      p.vx *= 0.998;
-      p.vy *= 0.998;
-      if (p.x < 0) p.x = canvas.width;
-      if (p.x > canvas.width) p.x = 0;
-      if (p.y < 0) p.y = canvas.height;
-      if (p.y > canvas.height) p.y = 0;
-      const alpha = 0.3 + Math.sin(Date.now()*0.002 + p.x*0.01) * 0.2;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-      ctx.fillStyle = p.color + alpha + ')';
-      ctx.fill();
-    });
-    // Lines
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i+1; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
-        const dist = Math.sqrt(dx*dx + dy*dy);
-        if (dist < 100) {
-          ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = 'rgba(0,150,199,' + ((1-dist/100)*0.12) + ')';
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
-        }
-      }
-    }
-    requestAnimationFrame(animate);
-  }
-  animate();
+  var h = new Date().getHours();
+  var g = h < 6 ? '夜深了，注意休息' : h < 12 ? '早上好，新的一天开始了' : h < 14 ? '中午好，适当休息' : h < 18 ? '下午好，继续加油' : '晚上好，辛苦了';
+  var el = document.getElementById('welcomeGreeting');
+  if (el) el.textContent = g;
 })();
 
 function enterDashboard() {
   localStorage.setItem('nexus_welcome_v4_done', '1');
-  const ws = document.getElementById('welcomeScreen');
+  var ws = document.getElementById('welcomeScreen');
   ws.classList.add('fade-out');
-  setTimeout(function() { ws.style.display = 'none'; }, 800);
+  setTimeout(function() { ws.style.display = 'none'; }, 1000);
 }
 
 /* ============ NAVIGATION ============ */
